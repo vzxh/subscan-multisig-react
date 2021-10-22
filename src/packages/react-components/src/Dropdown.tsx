@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { isUndefined } from '@polkadot/util';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { DropdownProps } from 'semantic-ui-react';
+
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button as SUIButton, Dropdown as SUIDropdown } from 'semantic-ui-react';
 import styled from 'styled-components';
+
+import { isUndefined } from '@polkadot/util';
+
 import Labelled from './Labelled';
 
 interface Props<Option> {
@@ -35,7 +36,7 @@ interface Props<Option> {
   searchInput?: { autoFocus: boolean };
   tabIndex?: number;
   transform?: (value: any) => any;
-  value?: any;
+  value?: unknown;
   withEllipsis?: boolean;
   withLabel?: boolean;
 }
@@ -77,23 +78,22 @@ function BaseDropdown<Option>({
   const [stored, setStored] = useState<string | undefined>();
 
   const _setStored = useCallback(
-    (val: string): void => {
-      const json = JSON.stringify({ v: val });
+    (value: string): void => {
+      const json = JSON.stringify({ v: value });
 
       if (lastUpdate.current !== json) {
         lastUpdate.current = json;
 
-        setStored(val);
+        setStored(value);
 
-        // eslint-disable-next-line
-        onChange && onChange(transform ? transform(val) : val);
+        onChange && onChange(transform ? transform(value) : value);
       }
     },
     [onChange, transform]
   );
 
   useEffect((): void => {
-    _setStored(isUndefined(value) ? defaultValue : value);
+    _setStored((isUndefined(value) ? defaultValue : value) as string);
   }, [_setStored, defaultValue, value]);
 
   const _onAdd = useCallback(

@@ -7,8 +7,7 @@ import { ApiPromise } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
 import { isFunction } from '@polkadot/util';
 
-// eslint-disable-next-line complexity
-export default function checkVisibility(
+export function checkVisibility(
   api: ApiPromise,
   address: string,
   accountInfo: DeriveAccountInfo,

@@ -14,7 +14,6 @@ export function useDebounce<T>(value: T, delay?: number): T {
 
   useEffect((): (() => void) => {
     const handler = setTimeout(() => {
-      // eslint-disable-next-line
       mountedRef.current && setDebouncedValue(value);
     }, delay || DEFAULT_DELAY);
 

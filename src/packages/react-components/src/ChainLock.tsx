@@ -4,8 +4,8 @@
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { chains } from '@polkadot/ui-settings/defaults/chains';
 import { useApi } from '@polkadot/react-hooks';
+import { chains } from '@polkadot/ui-settings/defaults/chains';
 
 import Toggle from './Toggle';
 import { useTranslation } from './translate';
@@ -34,7 +34,6 @@ function ChainLock({ className = '', genesisHash, isDisabled, onChange }: Props)
   const isTiedToChain = useMemo(() => calcLock(api.genesisHash.toHex(), genesisHash), [api, genesisHash]);
 
   const _onChange = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     (isTiedToChain: boolean) => onChange(isTiedToChain ? api.genesisHash.toHex() : null),
     [api, onChange]
   );

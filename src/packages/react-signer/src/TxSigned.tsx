@@ -1,30 +1,25 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SignerOptions } from '@polkadot/api/submittable/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { KeyringPair } from '@polkadot/keyring/types';
+import type { QueueTx, QueueTxMessageSetStatus } from '@polkadot/react-components/Status/types';
 import type { Option } from '@polkadot/types';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces';
 import type { Ledger } from '@polkadot/ui-keyring';
+import type { AddressFlags, AddressProxy, QrState } from './types';
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { ApiPromise } from '@polkadot/api';
 import { web3FromSource } from '@polkadot/extension-dapp';
+import { Button, ErrorBoundary, Modal, Output, StatusContext, Toggle } from '@polkadot/react-components';
+import { useApi, useLedger, useToggle } from '@polkadot/react-hooks';
 import { keyring } from '@polkadot/ui-keyring';
 import { assert, BN_ZERO } from '@polkadot/util';
 import { addressEq } from '@polkadot/util-crypto';
-import { useApi, useLedger, useToggle } from '../../react-hooks/src';
-import { Button, ErrorBoundary, Modal, Output, StatusContext, Toggle } from '../../react-components/src';
-import type { QueueTx, QueueTxMessageSetStatus } from '../../react-components/src/Status/types';
-import type { AddressFlags, AddressProxy, QrState } from './types';
 
 import Address from './Address';
 import Qr from './Qr';
@@ -100,9 +95,9 @@ async function signAndSend(
     );
   } catch (error) {
     console.error('signAndSend: error:', error);
-    queueSetTxStatus(currentItem.id, 'error', {}, error);
+    queueSetTxStatus(currentItem.id, 'error', {}, error as Error);
 
-    currentItem.txFailedCb && currentItem.txFailedCb(error);
+    currentItem.txFailedCb && currentItem.txFailedCb(error as Error);
   }
 }
 
@@ -121,9 +116,9 @@ async function signAsync(
     return tx.toJSON();
   } catch (error) {
     console.error('signAsync: error:', error);
-    queueSetTxStatus(id, 'error', undefined, error);
+    queueSetTxStatus(id, 'error', undefined, error as Error);
 
-    txFailedCb(error);
+    txFailedCb(error as Error);
   }
 
   return null;
@@ -281,14 +276,6 @@ function TxSigned({ className, currentItem, requestAddress }: Props): React.Reac
     [qrResolve]
   );
 
-  const _onCancel = useCallback((): void => {
-    const { id, signerCb = NOOP, txFailedCb = NOOP } = currentItem;
-
-    queueSetTxStatus(id, 'cancelled');
-    signerCb(id, null);
-    txFailedCb(null);
-  }, [currentItem, queueSetTxStatus]);
-
   const _unlock = useCallback(async (): Promise<boolean> => {
     let passwordError: string | null = null;
 
@@ -300,7 +287,6 @@ function TxSigned({ className, currentItem, requestAddress }: Props): React.Reac
           const ledger = getLedger();
           const { address } = await ledger.getAddress(false, flags.accountOffset, flags.addressOffset);
 
-          // eslint-disable-next-line no-console
           console.log(`Signing with Ledger address ${address}`);
         } catch (error) {
           console.error(error);
@@ -439,7 +425,7 @@ function TxSigned({ className, currentItem, requestAddress }: Props): React.Reac
           )}
         </ErrorBoundary>
       </Modal.Content>
-      <Modal.Actions onCancel={_onCancel}>
+      <Modal.Actions>
         <Button
           icon={flags.isQr ? 'qrcode' : 'sign-in-alt'}
           isBusy={isBusy}

@@ -1,13 +1,12 @@
-/* eslint-disable complexity */
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { KeyringPair } from '@polkadot/keyring/types';
+import type { QueueTx, QueueTxMessageSetStatus, QueueTxStatus } from '@polkadot/react-components/Status/types';
+import type { AddressFlags } from './types';
+
 import { SubmittableResult } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
-import type { QueueTx, QueueTxMessageSetStatus, QueueTxStatus } from '../../react-components/src/Status/types';
-import type { AddressFlags } from './types';
 
 const NOOP = () => undefined;
 const NO_FLAGS = {
@@ -96,6 +95,8 @@ export function handleTxResults(
     }
 
     const status = result.status.type.toLowerCase() as QueueTxStatus;
+
+    console.log(`${handler}: status :: ${JSON.stringify(result)}`);
 
     queueSetTxStatus(id, status, result);
     txUpdateCb(result);

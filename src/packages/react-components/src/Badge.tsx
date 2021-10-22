@@ -1,19 +1,20 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconName } from '@fortawesome/fontawesome-svg-core';
 
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useContext, useMemo, useState } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 
 import Icon from './Icon';
 import Tooltip from './Tooltip';
+import { ThemeDef } from './types';
 
 interface Props {
   className?: string;
-  color: 'blue' | 'gray' | 'green' | 'highlight' | 'normal' | 'orange' | 'purple' | 'red' | 'transparent' | 'white';
+  color?: 'blue' | 'gray' | 'green' | 'highlight' | 'normal' | 'orange' | 'purple' | 'red' | 'transparent' | 'white';
   hover?: React.ReactNode;
+  hoverAction?: React.ReactNode;
   icon?: IconName;
   info?: React.ReactNode;
   isSmall?: boolean;
@@ -26,25 +27,50 @@ function Badge({
   className = '',
   color = 'normal',
   hover,
+  hoverAction,
   icon,
   info,
   isSmall,
   onClick,
 }: Props): React.ReactElement<Props> | null {
-  const [trigger] = useState(() => `badge-hover-${Date.now()}-${badgeId++}`);
+  const badgeTestId = `${icon ? `${icon}-` : ''}badge`;
+  const { theme } = useContext(ThemeContext as React.Context<ThemeDef>);
+
+  const [trigger] = useState(() => `${badgeTestId}-hover-${Date.now()}-${badgeId++}`);
   const extraProps = hover ? { 'data-for': trigger, 'data-tip': true } : {};
   const isHighlight = color === 'highlight';
+
+  const hoverContent = useMemo(
+    () => (
+      <div className="hoverContent">
+        <div>{hover}</div>
+        {hoverAction && (
+          <a className={`${color}Color`} onClick={onClick}>
+            {hoverAction}
+          </a>
+        )}
+      </div>
+    ),
+    [color, hover, hoverAction, onClick]
+  );
 
   return (
     <div
       {...extraProps}
       className={`ui--Badge${hover ? ' isTooltip' : ''}${isSmall ? ' isSmall' : ''}${onClick ? ' isClickable' : ''}${
         isHighlight ? ' highlight--bg' : ''
-      } ${color}Color ${className}`}
-      onClick={onClick}
+      } ${color}Color ${className}${icon ? ' withIcon' : ''}${info ? ' withInfo' : ''}${
+        hoverAction ? ' withAction' : ''
+      } ${theme}Theme `}
+      data-testid={badgeTestId}
+      onClick={hoverAction ? undefined : onClick}
     >
-      <div className={isHighlight ? 'highlight--color-contrast' : ''}>{info || (icon && <Icon icon={icon} />)}</div>
-      {hover && <Tooltip text={hover} trigger={trigger} />}
+      <div className={isHighlight ? 'highlight--color-contrast' : ''}>
+        {icon && <Icon icon={icon} />}
+        {info}
+        {hoverAction && <Icon className="action-icon" icon="chevron-right" />}
+      </div>
+      {hover && <Tooltip className="accounts-badge" clickable={!!hoverAction} text={hoverContent} trigger={trigger} />}
     </div>
   );
 }
@@ -57,7 +83,7 @@ export default React.memo(styled(Badge)`
   font-size: 12px;
   height: 22px;
   line-height: 22px;
-  margin-right: 0.25rem;
+  margin-right: 0.43rem;
   min-width: 22px;
   padding: 0 4px;
   overflow: hidden;
@@ -76,7 +102,7 @@ export default React.memo(styled(Badge)`
     width: 1em;
   }
 
-  &.isClickable {
+  &.isClickable:not(.withAction) {
     cursor: pointer;
   }
 
@@ -130,5 +156,68 @@ export default React.memo(styled(Badge)`
 
   &.whiteColor {
     background: rgba(255, 255, 255, 0.3);
+  }
+
+  &.recovery,
+  &.warning,
+  &.information,
+  &.important {
+    background-color: #ffffff;
+
+    &.darkTheme {
+      background-color: #212227;
+    }
+  }
+
+  &.recovery {
+    background-image: linear-gradient(0deg, rgba(17, 185, 74, 0.08), rgba(17, 185, 74, 0.08));
+    color: #11b94a;
+  }
+
+  &.warning {
+    background-image: linear-gradient(0deg, rgba(232, 111, 0, 0.08), rgba(232, 111, 0, 0.08));
+    color: #ff7d01;
+  }
+
+  &.information {
+    background-image: linear-gradient(0deg, rgba(226, 246, 255, 0.08), rgba(226, 246, 255, 0.08));
+    color: #3bbeff;
+
+    &.lightTheme {
+      background-color: rgba(226, 246, 255, 1);
+    }
+  }
+
+  &.important {
+    background: linear-gradient(0deg, rgba(230, 0, 122, 0.08), rgba(230, 0, 122, 0.08)), rgba(230, 0, 122, 0.01);
+    color: #e6007a;
+  }
+
+  &.withAction.withIcon:not(.withInfo) {
+    width: 34px;
+    border-radius: 4px;
+  }
+
+  &.withInfo.withIcon:not(.withAction) {
+    width: 34px;
+    border-radius: 18px;
+  }
+
+  &.withAction.withIcon.withInfo {
+    width: 44px;
+    border-radius: 4px;
+  }
+
+  &.withInfo .ui--Icon:not(.action-icon) {
+    margin-right: 4px;
+  }
+
+  .hoverContent {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .action-icon {
+    margin-left: 4px;
   }
 `);

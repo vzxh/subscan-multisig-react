@@ -1,10 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ApiPromise } from '@polkadot/api';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
-import React from 'react';
 import type { DropdownOption, DropdownOptions } from '../../util/types';
+
+import React from 'react';
+
+import { ApiPromise } from '@polkadot/api';
 
 export default function createOptions(
   api: ApiPromise,

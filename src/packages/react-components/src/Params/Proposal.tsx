@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Props, RawParam } from '@polkadot/react-params/types';
+
 import React, { useCallback } from 'react';
+
 import { useApi } from '@polkadot/react-hooks';
+
 import ExtrinsicDisplay from './Extrinsic';
 
 function ProposalDisplay({
@@ -26,7 +29,6 @@ function ProposalDisplay({
         proposal = api.createType('Proposal', value);
       }
 
-      // eslint-disable-next-line
       onChange &&
         onChange({
           isValid,

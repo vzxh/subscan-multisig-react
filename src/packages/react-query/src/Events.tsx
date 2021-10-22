@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-query authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ApiPromise } from '@polkadot/api';
-import { useApi, useCall } from '@polkadot/react-hooks';
 import type { Vec } from '@polkadot/types';
 import type { EventRecord } from '@polkadot/types/interfaces';
+import type { IndexedEvent, KeyedEvent } from './types';
+
+import React, { useEffect, useRef, useState } from 'react';
+
+import { useApi, useCall } from '@polkadot/react-hooks';
 import { stringify, stringToU8a } from '@polkadot/util';
 import { xxhashAsHex } from '@polkadot/util-crypto';
-import React, { useEffect, useRef, useState } from 'react';
-import type { IndexedEvent, KeyedEvent } from './types';
 
 interface Events {
   eventCount: number;
@@ -112,7 +113,6 @@ function EventsBase({ children }: Props): React.ReactElement<Props> {
   const prevHashes = useRef({ block: null, event: null });
 
   useEffect((): void => {
-    // eslint-disable-next-line
     records && manageEvents(api, prevHashes.current, records, setState).catch(console.error);
   }, [api, prevHashes, records, setState]);
 

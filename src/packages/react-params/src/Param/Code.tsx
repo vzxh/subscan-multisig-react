@@ -1,9 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { isWasm } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
 import type { Props } from '../types';
+
+import React, { useCallback, useState } from 'react';
+
+import { isWasm } from '@polkadot/util';
+
 import Bytes from './Bytes';
 import BytesFile from './File';
 
@@ -23,11 +26,10 @@ function Code({
 
   const _onChange = useCallback(
     (value: Uint8Array): void => {
-      const beValid = isWasm(value);
+      const isValid = isWasm(value);
 
-      // eslint-disable-next-line
-      onChange && onChange({ isValid: beValid, value });
-      setIsValid(beValid);
+      onChange && onChange({ isValid, value });
+      setIsValid(isValid);
     },
     [onChange]
   );

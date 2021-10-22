@@ -3,11 +3,13 @@
 
 import type { ApiPromise } from '@polkadot/api';
 import type { QueryableStorageMultiArg } from '@polkadot/api/types';
-import { useEffect, useRef, useState } from 'react';
-import { useApi } from './useApi';
 import type { Tracker } from './useCall';
-import { transformIdentity, unsubscribe } from './useCall';
 import type { MountedRef } from './useIsMountedRef';
+
+import { useEffect, useRef, useState } from 'react';
+
+import { useApi } from './useApi';
+import { transformIdentity, unsubscribe } from './useCall';
 import { useIsMountedRef } from './useIsMountedRef';
 
 interface TrackerRef {
@@ -16,7 +18,6 @@ interface TrackerRef {
 
 interface CallOptions<T> {
   defaultValue?: T;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transform?: (value: any) => T;
 }
 
@@ -45,7 +46,6 @@ function subscribe<T>(
           if (mountedRef.current && tracker.current.isActive) {
             let valueIndex = -1;
 
-            // eslint-disable-next-line
             mountedRef.current &&
               tracker.current.isActive &&
               setValue(transform(calls.map((_, index) => (included[index] ? value[++valueIndex] : undefined))));

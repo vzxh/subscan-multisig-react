@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Codec } from '@polkadot/types/types';
-import React, { useCallback, useState } from 'react';
 import type { Props } from '../types';
 
-import { Input } from '../../../react-components/src';
+import React, { useCallback, useState } from 'react';
+
+import { Input } from '@polkadot/react-components';
 
 import Bare from './Bare';
 
@@ -23,16 +24,15 @@ function Raw({
   const [isValid, setIsValid] = useState(false);
 
   const _onChange = useCallback(
-    (val: string): void => {
-      const beValid = val.length !== 0;
+    (value: string): void => {
+      const isValid = value.length !== 0;
 
-      // eslint-disable-next-line
       onChange &&
         onChange({
-          isValid: beValid,
-          value: val,
+          isValid,
+          value,
         });
-      setIsValid(beValid);
+      setIsValid(isValid);
     },
     [onChange]
   );

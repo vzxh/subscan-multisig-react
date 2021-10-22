@@ -1,13 +1,14 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { ParamDef, Props, RawParam } from '../types';
+
 import React, { useEffect, useState } from 'react';
 
 import { isUndefined } from '@polkadot/util';
-import type { ParamDef, Props, RawParam } from '../types';
 
 import getInitValue from '../initValue';
-import { Params } from '..';
+import Params from '../';
 import Base from './Base';
 import useParamDefs from './useParamDefs';
 
@@ -34,46 +35,43 @@ function VectorFixed({
   const [values, setValues] = useState<RawParam[]>([]);
 
   // build up the list of parameters we are using
-  // eslint-disable-next-line complexity
   useEffect((): void => {
     if (inputParams.length) {
       const count = inputParams[0].length || 1;
       const max = isDisabled ? ((defaultValue.value as RawParam[]) || []).length : count;
-      const parameters: ParamDef[] = [];
+      const params: ParamDef[] = [];
 
       for (let index = 0; index < max; index++) {
-        parameters.push(generateParam(inputParams, index));
+        params.push(generateParam(inputParams, index));
       }
 
-      setParams(parameters);
+      setParams(params);
     }
   }, [defaultValue, isDisabled, inputParams]);
 
   // when !isDisable, generating an input list based on count
   useEffect((): void => {
-    // eslint-disable-next-line
     !isDisabled &&
       inputParams.length &&
-      setValues((source): RawParam[] => {
+      setValues((values): RawParam[] => {
         const count = inputParams[0].length || 1;
 
-        if (source.length === count) {
-          return source;
+        if (values.length === count) {
+          return values;
         }
 
-        while (source.length < count) {
+        while (values.length < count) {
           const value = getInitValue(registry, inputParams[0].type);
 
-          source.push({ isValid: !isUndefined(value), value });
+          values.push({ isValid: !isUndefined(value), value });
         }
 
-        return source.slice(0, count);
+        return values.slice(0, count);
       });
   }, [inputParams, isDisabled, registry]);
 
   // when isDisabled, set the values based on the defaultValue input
   useEffect((): void => {
-    // eslint-disable-next-line
     isDisabled &&
       setValues(
         ((defaultValue.value as RawParam[]) || []).map((value: RawParam) =>
@@ -84,7 +82,6 @@ function VectorFixed({
 
   // when our values has changed, alert upstream
   useEffect((): void => {
-    // eslint-disable-next-line
     onChange &&
       onChange({
         isValid: values.reduce((result: boolean, { isValid }) => result && isValid, true),

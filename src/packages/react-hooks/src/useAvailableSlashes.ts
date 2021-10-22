@@ -23,7 +23,6 @@ export function useAvailableSlashes(): [BN, UnappliedSlash[]][] {
   const mountedRef = useIsMountedRef();
   const [slashes, setSlashes] = useState<[BN, UnappliedSlash[]][]>([]);
 
-  // eslint-disable-next-line
   useEffect((): Unsub => {
     let unsub: Unsub | undefined;
 
@@ -41,12 +40,10 @@ export function useAvailableSlashes(): [BN, UnappliedSlash[]][] {
       if (range.length) {
         (async (): Promise<void> => {
           unsub = await api.query.staking.unappliedSlashes.multi<Vec<UnappliedSlash>>(range, (values): void => {
-            // eslint-disable-next-line
             mountedRef.current &&
               setSlashes(
                 values
                   .map((value, index): [BN, UnappliedSlash[]] => [from.addn(index), value])
-                  // eslint-disable-next-line
                   .filter(([, slashes]) => slashes.length)
               );
           });
@@ -55,7 +52,6 @@ export function useAvailableSlashes(): [BN, UnappliedSlash[]][] {
     }
 
     return (): void => {
-      // eslint-disable-next-line
       unsub && unsub();
     };
   }, [api, earliestSlash, indexes, mountedRef]);

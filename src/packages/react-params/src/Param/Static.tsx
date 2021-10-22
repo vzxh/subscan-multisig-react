@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Codec } from '@polkadot/types/types';
+import type { RawParam } from '../types';
 
 import React from 'react';
 import styled from 'styled-components';
-import type { RawParam } from '../types';
 
-import { Static } from '../../../react-components/src';
+import { Static } from '@polkadot/react-components';
 
 import { useTranslation } from '../translate';
+import { toHumanJson } from '../valueToText';
 import Bare from './Bare';
 
 interface Props {
@@ -22,7 +23,6 @@ interface Props {
   withLabel?: boolean;
 }
 
-// eslint-disable-next-line complexity
 function StaticParam({
   asHex,
   children,
@@ -37,17 +37,11 @@ function StaticParam({
     (defaultValue.value as string) &&
     (asHex
       ? (defaultValue.value as Codec).toHex()
-      : JSON.stringify(
+      : toHumanJson(
           (defaultValue.value as { toHuman?: () => unknown }).toHuman
             ? (defaultValue.value as Codec).toHuman()
-            : defaultValue.value,
-          null,
-          // eslint-disable-next-line no-magic-numbers
-          2
-        )
-          .replace(/"/g, '')
-          .replace(/\\/g, '')
-          .replace(/\],\[/g, '],\n['));
+            : defaultValue.value
+        ));
 
   return (
     <Bare className={className}>

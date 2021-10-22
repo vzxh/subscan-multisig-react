@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +28,6 @@ const DEFAULT_STATUS = {
   remainingBlocks: null,
 };
 
-// eslint-disable-next-line complexity
 function getStatus(
   api: ApiPromise,
   bestNumber: BlockNumber,
@@ -37,7 +35,10 @@ function getStatus(
   numMembers: number,
   section: 'council' | 'membership' | 'technicalCommittee'
 ): State {
-  if (!votes.end) {
+  const [instance] = api.registry.getModuleInstances(api.runtimeVersion.specName.toString(), section) || [section];
+  const modLocation = isFunction(api.tx[instance as 'technicalCommittee']?.close) ? instance : null;
+
+  if (!votes.end || !modLocation) {
     return {
       hasFailed: false,
       hasPassed: false,
@@ -54,11 +55,10 @@ function getStatus(
   return {
     hasFailed,
     hasPassed,
-    isCloseable: isFunction(api.tx[section].close)
-      ? api.tx[section].close.meta.args.length === 4 // current-generation
+    isCloseable:
+      api.tx[modLocation].close.meta.args.length === 4 // current-generation
         ? isEnd || hasPassed || hasFailed
-        : isEnd
-      : false,
+        : isEnd,
     isVoteable: !isEnd,
     remainingBlocks: isEnd ? null : votes.end.sub(bestNumber),
   };

@@ -5,14 +5,12 @@ import { useEffect, useState } from 'react';
 
 import { useIsMountedRef } from './useIsMountedRef';
 
-// eslint-disable-next-line
 export function useLoadingDelay(delay = 100): boolean {
   const mountedRef = useIsMountedRef();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect((): void => {
     setTimeout((): void => {
-      // eslint-disable-next-line
       mountedRef.current && setIsLoading(false);
     }, delay);
     // Ignore, this is for the initial setup

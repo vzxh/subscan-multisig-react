@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { DispatchResult } from '@polkadot/types/interfaces';
-import React, { useMemo } from 'react';
 import type { Props } from '../types';
 
-import { Input } from '../../../react-components/src';
+import React, { useMemo } from 'react';
+
+import { Input } from '@polkadot/react-components';
 
 import DispatchError from './DispatchError';
 import Static from './Static';

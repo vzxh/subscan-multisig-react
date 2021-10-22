@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Extrinsic } from '@polkadot/types/interfaces';
-import React from 'react';
 import type { Props } from '../types';
 
-import { Call, Static } from '../../../react-components/src';
+import React from 'react';
+
+import { Call, Static } from '@polkadot/react-components';
 
 import Bare from './Bare';
 import Unknown from './Unknown';

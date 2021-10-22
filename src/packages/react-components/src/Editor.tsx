@@ -48,7 +48,6 @@ function Editor({ className = '', code, isValid, onEdit }: Props): React.ReactEl
     });
 
     editor.updateCode(code);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (editor as any).editorRoot.addEventListener('keydown', (): void => {
       (editor as unknown as Record<string, (value: unknown) => void>).onUpdate(onEdit);
     });
@@ -58,7 +57,6 @@ function Editor({ className = '', code, isValid, onEdit }: Props): React.ReactEl
   }, []);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     editorRef.current && editorRef.current.updateCode(code);
   }, [code]);
 
@@ -67,7 +65,7 @@ function Editor({ className = '', code, isValid, onEdit }: Props): React.ReactEl
 
 export default React.memo(styled(Editor)`
   .codeflask {
-    border: 1px solid rgba(34, 36, 38, 0.15);
+    border: 1px solid var(--border-input);
     background: transparent;
   }
 

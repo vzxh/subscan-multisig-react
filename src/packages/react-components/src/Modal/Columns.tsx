@@ -1,9 +1,10 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { ColumnsProps } from './types';
+
 import React from 'react';
 import styled from 'styled-components';
-import type { ColumnsProps } from './types';
 
 function Columns({ children, className = '', hint }: ColumnsProps): React.ReactElement<ColumnsProps> {
   return (

@@ -18,6 +18,8 @@ interface Props {
   onToggleIsEditing?: () => void;
   onSave?: () => void;
   value: string[];
+  withEditButton?: boolean;
+  withTitle?: boolean;
 }
 
 function Tags({
@@ -29,6 +31,8 @@ function Tags({
   onSave,
   onToggleIsEditing,
   value,
+  withEditButton = true,
+  withTitle,
 }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
 
@@ -43,14 +47,13 @@ function Tags({
   );
 
   const _onSave = useCallback((): void => {
-    // eslint-disable-next-line
     onSave && onSave();
-    // eslint-disable-next-line
     onToggleIsEditing && onToggleIsEditing();
   }, [onSave, onToggleIsEditing]);
 
   return (
     <div className={`ui--Tags ${className}`}>
+      {withTitle && <h5>{t<string>('Tags')}</h5>}
       {isEditable && isEditing ? (
         <InputTags
           defaultValue={value}
@@ -58,14 +61,16 @@ function Tags({
           onChange={onChange}
           onClose={_onSave}
           openOnFocus
-          searchInput={{ autoFocus: true }}
+          searchInput={{ autoFocus: false }}
           value={value}
           withLabel={false}
         />
+      ) : isEditable && withEditButton ? (
+        <EditButton className={value.length === 0 ? 'center' : 'left'} onClick={onToggleIsEditing}>
+          {contents}
+        </EditButton>
       ) : (
-        <div className="tags--toggle">
-          {isEditable ? <EditButton onClick={onToggleIsEditing}>{contents}</EditButton> : contents}
-        </div>
+        contents
       )}
       {children}
     </div>
@@ -73,11 +78,34 @@ function Tags({
 }
 
 export default React.memo(styled(Tags)`
-  .tags--toggle {
-    display: inline-block;
+  h5 {
+    font-style: normal;
+    font-weight: var(--font-weight-bold);
+    font-size: 0.714rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
 
-    label {
-      display: inline-block !important;
+  label {
+    display: inline-block;
+  }
+
+  .ui--EditButton {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    &.center {
+      justify-content: center;
     }
+
+    &.left {
+      justify-content: left;
+    }
+  }
+
+  .ui--Tag {
+    margin: 0.1rem 0 0.1rem 0.571rem;
   }
 `);

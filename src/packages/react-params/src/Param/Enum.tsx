@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { TypeDef } from '@polkadot/types/types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Enum, getTypeDef } from '@polkadot/types';
 import type { ParamDef, Props, RawParam } from '../types';
 
-import { Dropdown } from '../../../react-components/src';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { Params } from '..';
+import { Dropdown } from '@polkadot/react-components';
+import { Enum, getTypeDef } from '@polkadot/types';
+
+import Params from '../';
 import Bare from './Bare';
 import Static from './Static';
 
@@ -42,18 +43,18 @@ function EnumParam(props: Props): React.ReactElement<Props> {
   useEffect((): void => {
     const rawType = registry.createType(type.type as 'u32').toRawType();
     const typeDef = getTypeDef(rawType);
-    const subType = typeDef.sub as TypeDef[];
+    const subTypes = (typeDef.sub as TypeDef[]).filter(({ name }) => !!name && !name.startsWith('__Unused'));
 
     setOptions({
-      options: subType.map(
+      options: subTypes.map(
         ({ name }): Option => ({
           text: name,
           value: name,
         })
       ),
-      subTypes: subType,
+      subTypes,
     });
-    setCurrent([{ name: subType[0].name, type: subType[0] }]);
+    setCurrent([{ name: subTypes[0].name, type: subTypes[0] }]);
   }, [registry, type]);
 
   useEffect((): void => {
@@ -77,7 +78,6 @@ function EnumParam(props: Props): React.ReactElement<Props> {
 
   const _onChangeParam = useCallback(
     ([{ isValid, value }]: RawParam[]): void => {
-      // eslint-disable-next-line
       current &&
         onChange &&
         onChange({

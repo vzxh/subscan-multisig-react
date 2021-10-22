@@ -1,10 +1,11 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback } from 'react';
 import type { Props, RawParam } from '../types';
 
-import { Params } from '..';
+import React, { useCallback } from 'react';
+
+import Params from '../';
 import Base from './Base';
 import Static from './Static';
 import useParamDefs from './useParamDefs';
@@ -15,7 +16,6 @@ function Tuple(props: Props): React.ReactElement<Props> {
 
   const _onChangeParams = useCallback(
     (values: RawParam[]): void => {
-      // eslint-disable-next-line
       onChange &&
         onChange({
           isValid: values.reduce((result: boolean, { isValid }) => result && isValid, true),

@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +33,6 @@ function Toggle({
           event.stopPropagation();
         }
 
-        // eslint-disable-next-line
         onChange && onChange(!value);
       }
     },

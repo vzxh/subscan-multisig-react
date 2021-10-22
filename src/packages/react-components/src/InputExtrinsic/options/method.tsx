@@ -1,9 +1,11 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ApiPromise } from '@polkadot/api';
-import React from 'react';
 import type { DropdownOption, DropdownOptions } from '../../util/types';
+
+import React from 'react';
+
+import { ApiPromise } from '@polkadot/api';
 
 export default function createOptions(api: ApiPromise, sectionName: string): DropdownOptions {
   const section = api.tx[sectionName];
@@ -16,10 +18,7 @@ export default function createOptions(api: ApiPromise, sectionName: string): Dro
     .sort()
     .map((value): DropdownOption => {
       const method = section[value];
-      const inputs = method.meta.args
-        .filter((arg): boolean => arg.type.toString() !== 'Origin')
-        .map((arg): string => arg.name.toString())
-        .join(', ');
+      const inputs = method.meta.args.map((arg) => arg.name.toString()).join(', ');
 
       return {
         className: 'ui--DropdownLinked-Item',
@@ -29,7 +28,7 @@ export default function createOptions(api: ApiPromise, sectionName: string): Dro
             {value}({inputs})
           </div>,
           <div className="ui--DropdownLinked-Item-text" key={`${sectionName}_${value}:text`}>
-            {(method.meta.documentation[0] || value).toString()}
+            {(method.meta.docs[0] || value).toString()}
           </div>,
         ],
         value,

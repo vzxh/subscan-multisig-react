@@ -1,10 +1,11 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
 import type { Size } from '../types';
 
-import { Labelled } from '../../../react-components/src';
+import React from 'react';
+
+import { Labelled } from '@polkadot/react-components';
 
 import Bare from './Bare';
 

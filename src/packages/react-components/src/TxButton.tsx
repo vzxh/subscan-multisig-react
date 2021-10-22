@@ -1,15 +1,14 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { TxButtonProps as Props } from './types';
 
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { SubmittableResult } from '@polkadot/api';
-import { assert, isFunction } from '@polkadot/util';
 import { useIsMountedRef } from '@polkadot/react-hooks';
-import type { TxButtonProps as Props } from './types';
+import { assert, isFunction } from '@polkadot/util';
 
 import Button from './Button';
 import { StatusContext } from './Status';
@@ -46,16 +45,13 @@ function TxButton({
   const [isStarted, setIsStarted] = useState(false);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     isStarted && onStart && onStart();
   }, [isStarted, onStart]);
 
   const _onFailed = useCallback(
-    (result: SubmittableResult | null): void => {
-      // eslint-disable-next-line
+    (result: Error | SubmittableResult | null): void => {
       mountedRef.current && setIsSending(false);
 
-      // eslint-disable-next-line
       onFailed && onFailed(result);
     },
     [onFailed, setIsSending, mountedRef]
@@ -63,17 +59,14 @@ function TxButton({
 
   const _onSuccess = useCallback(
     (result: SubmittableResult): void => {
-      // eslint-disable-next-line
       mountedRef.current && setIsSending(false);
 
-      // eslint-disable-next-line
       onSuccess && onSuccess(result);
     },
     [onSuccess, setIsSending, mountedRef]
   );
 
   const _onStart = useCallback((): void => {
-    // eslint-disable-next-line
     mountedRef.current && setIsStarted(true);
   }, [setIsStarted, mountedRef]);
 
@@ -88,7 +81,6 @@ function TxButton({
 
     assert(extrinsics?.length, 'Expected generated extrinsic passed to TxButton');
 
-    // eslint-disable-next-line
     mountedRef.current && withSpinner && setIsSending(true);
 
     extrinsics.forEach((extrinsic): void => {
@@ -103,7 +95,6 @@ function TxButton({
       });
     });
 
-    // eslint-disable-next-line
     onClick && onClick();
   }, [
     _onFailed,

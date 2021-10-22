@@ -1,13 +1,11 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { isFunction, isUndefined } from '@polkadot/util';
 import React, { useCallback, useState } from 'react';
 import { Input as SUIInput } from 'semantic-ui-react';
+
+import { isFunction, isUndefined } from '@polkadot/util';
+
 import Labelled from './Labelled';
 
 type Input$Type = 'number' | 'password' | 'text';
@@ -77,8 +75,7 @@ const KEYS = {
   ZERO: '0',
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const KEYS_PRE: any[] = [KEYS.ALT, KEYS.CMD, KEYS.CTRL];
+const KEYS_PRE: unknown[] = [KEYS.ALT, KEYS.CMD, KEYS.CTRL];
 
 // reference: degrade key to keyCode for cross-browser compatibility https://www.w3schools.com/jsref/event_key_keycode.asp
 const isCopy = (key: string, isPreKeyDown: boolean): boolean => isPreKeyDown && key === KEYS.C;

@@ -16,9 +16,9 @@ interface Props {
   onClick: () => void;
 }
 
-function EditButton({ children, className, icon = 'edit', onClick }: Props): React.ReactElement<Props> {
+function EditButton({ children, className = '', icon = 'edit', onClick }: Props): React.ReactElement<Props> {
   return (
-    <div className={className} onClick={onClick}>
+    <div className={`ui--EditButton ${className}`} onClick={onClick}>
       {children}
       <span className="editSpan">
         <Icon className="icon-button" icon={icon} />

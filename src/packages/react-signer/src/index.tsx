@@ -1,17 +1,18 @@
-/* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ApiPromise } from '@polkadot/api';
+import type { QueueTx, QueueTxMessageSetStatus, QueueTxResult } from '@polkadot/react-components/Status/types';
+import type { BareProps as Props } from '@polkadot/react-components/types';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
-import { assert, isFunction } from '@polkadot/util';
-import React, { useContext, useEffect, useMemo } from 'react';
+
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { Modal, StatusContext } from '../../react-components/src';
-import type { QueueTx, QueueTxMessageSetStatus, QueueTxResult } from '../../react-components/src/Status/types';
-import type { BareProps as Props } from '../../react-components/src/types';
-import { useApi } from '../../react-hooks/src';
+
+import { ApiPromise } from '@polkadot/api';
+import { Modal, StatusContext } from '@polkadot/react-components';
+import { useApi } from '@polkadot/react-hooks';
+import { assert, isFunction, loggerFormat } from '@polkadot/util';
+
 import { useTranslation } from './translate';
 import TxSigned from './TxSigned';
 import TxUnsigned from './TxUnsigned';
@@ -24,12 +25,14 @@ interface ItemState {
   requestAddress: string | null;
 }
 
+const NOOP = () => undefined;
+
 const AVAIL_STATUS = ['queued', 'qr', 'signing'];
 
 async function submitRpc(
   api: ApiPromise,
   { method, section }: DefinitionRpcExt,
-  values: any[]
+  values: unknown[]
 ): Promise<QueueTxResult> {
   try {
     const rpc = api.rpc as Record<string, Record<string, (...params: unknown[]) => Promise<unknown>>>;
@@ -37,6 +40,8 @@ async function submitRpc(
     assert(isFunction(rpc[section] && rpc[section][method]), `api.rpc.${section}.${method} does not exist`);
 
     const result = await rpc[section][method](...values);
+
+    console.log('submitRpc: result ::', loggerFormat(result));
 
     return {
       result,
@@ -98,9 +103,18 @@ function Signer({ children, className = '' }: Props): React.ReactElement<Props> 
   const { count, currentItem, isRpc, isVisible, requestAddress } = useMemo(() => extractCurrent(txqueue), [txqueue]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     isRpc && currentItem && sendRpc(api, queueSetTxStatus, currentItem).catch(console.error);
   }, [api, isRpc, currentItem, queueSetTxStatus]);
+
+  const _onCancel = useCallback((): void => {
+    if (currentItem) {
+      const { id, signerCb = NOOP, txFailedCb = NOOP } = currentItem;
+
+      queueSetTxStatus(id, 'cancelled');
+      signerCb(id, null);
+      txFailedCb(null);
+    }
+  }, [currentItem, queueSetTxStatus]);
 
   return (
     <>
@@ -115,6 +129,7 @@ function Signer({ children, className = '' }: Props): React.ReactElement<Props> 
             </>
           }
           key={currentItem.id}
+          onClose={_onCancel}
           size="large"
         >
           {currentItem.isUnsigned ? (

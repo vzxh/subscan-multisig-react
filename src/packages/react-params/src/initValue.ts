@@ -9,16 +9,15 @@ import { BN_ZERO, isBn } from '@polkadot/util';
 
 const warnList: string[] = [];
 
-// eslint-disable-next-line complexity
 export default function getInitValue(registry: Registry, def: TypeDef): unknown {
   if (def.info === TypeDefInfo.Vec) {
     return [getInitValue(registry, def.sub as TypeDef)];
   } else if (def.info === TypeDefInfo.Tuple) {
-    return Array.isArray(def.sub) ? def.sub.map((item) => getInitValue(registry, item)) : [];
+    return Array.isArray(def.sub) ? def.sub.map((def) => getInitValue(registry, def)) : [];
   } else if (def.info === TypeDefInfo.Struct) {
     return Array.isArray(def.sub)
-      ? def.sub.reduce((result: Record<string, unknown>, cur): Record<string, unknown> => {
-          result[cur.name as string] = getInitValue(registry, cur);
+      ? def.sub.reduce((result: Record<string, unknown>, def): Record<string, unknown> => {
+          result[def.name as string] = getInitValue(registry, def);
 
           return result;
         }, {})
@@ -134,7 +133,6 @@ export default function getInitValue(registry: Registry, def: TypeDef): unknown 
       // we only want to want once, not spam
       if (!warnList.includes(type)) {
         warnList.push(type);
-        // eslint-disable-next-line
         error && console.error(`params: initValue: ${error}`);
         console.info(
           `params: initValue: No default value for type ${type} from ${JSON.stringify(def)}, using defaults`

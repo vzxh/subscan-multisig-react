@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Bytes } from '@polkadot/types';
-import React from 'react';
 import type { Props } from '../types';
+
+import React from 'react';
+
 import CallDisplay from './Call';
 import Unknown from './Unknown';
 

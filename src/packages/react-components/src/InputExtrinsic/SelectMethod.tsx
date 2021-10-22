@@ -1,11 +1,14 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ApiPromise } from '@polkadot/api';
 import type { SubmittableExtrinsicFunction } from '@polkadot/api/types';
-import React, { useCallback } from 'react';
-import Dropdown from '../Dropdown';
 import type { DropdownOptions } from '../util/types';
+
+import React, { useCallback } from 'react';
+
+import { ApiPromise } from '@polkadot/api';
+
+import Dropdown from '../Dropdown';
 
 interface Props {
   api: ApiPromise;

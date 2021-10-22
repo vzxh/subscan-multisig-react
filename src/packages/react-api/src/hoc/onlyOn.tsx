@@ -1,9 +1,10 @@
 // Copyright 2017-2021 @polkadot/app-accounts authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { Environment } from '../types';
 
 import { ComponentType } from 'react';
-import type { Environment } from '../types';
+
 import { getEnvironment } from '../util';
 
 const onlyOn =

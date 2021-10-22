@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -6,8 +5,7 @@ import { keyring } from '@polkadot/ui-keyring';
 import { assert, hexToU8a, isHex } from '@polkadot/util';
 import { ethereumEncode } from '@polkadot/util-crypto';
 
-// eslint-disable-next-line complexity
-export default function toAddress(value?: string | Uint8Array | null, allowIndices = false): string | undefined {
+export function toAddress(value?: string | Uint8Array | null, allowIndices = false): string | undefined {
   if (value) {
     try {
       const u8a = isHex(value) ? hexToU8a(value) : keyring.decodeAddress(value);

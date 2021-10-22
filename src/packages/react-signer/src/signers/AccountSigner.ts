@@ -14,16 +14,12 @@ export default class AccountSigner implements Signer {
   readonly #registry: Registry;
 
   constructor(registry: Registry, keyringPair: KeyringPair) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     this.#keyringPair = keyringPair;
     this.#registry = registry;
   }
 
   public async signPayload(payload: SignerPayloadJSON): Promise<SignerResult> {
     return new Promise((resolve): void => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const signed = this.#registry
         .createType('ExtrinsicPayload', payload, { version: payload.version })
         .sign(this.#keyringPair);

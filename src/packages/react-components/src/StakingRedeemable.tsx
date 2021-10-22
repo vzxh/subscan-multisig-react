@@ -7,8 +7,8 @@ import type { SlashingSpans } from '@polkadot/types/interfaces';
 
 import React from 'react';
 
-import { FormatBalance } from '@polkadot/react-query';
 import { useAccounts, useApi, useCall } from '@polkadot/react-hooks';
+import { FormatBalance } from '@polkadot/react-query';
 
 import { useTranslation } from './translate';
 import TxButton from './TxButton';
@@ -35,7 +35,7 @@ function StakingRedeemable({ className = '', stakingInfo }: Props): React.ReactE
   return (
     <div className={className}>
       <FormatBalance value={stakingInfo.redeemable}>
-        {allAccounts.includes((stakingInfo.controllerId || '').toString()) && (
+        {allAccounts.includes((stakingInfo.controllerId || '').toString()) ? (
           <TxButton
             accountId={stakingInfo.controllerId}
             icon="lock"
@@ -45,6 +45,8 @@ function StakingRedeemable({ className = '', stakingInfo }: Props): React.ReactE
             tooltip={t<string>('Withdraw these unbonded funds')}
             tx={api.tx.staking.withdrawUnbonded}
           />
+        ) : (
+          <span className="icon-void">&nbsp;</span>
         )}
       </FormatBalance>
     </div>

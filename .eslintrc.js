@@ -8,7 +8,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
-    'plugin:prettier/recommended',
+    // 'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   overrides: [
@@ -25,7 +25,7 @@ module.exports = {
     'eslint-plugin-jsdoc',
     'eslint-plugin-react',
     'jsdoc',
-    'prettier',
+    // 'prettier',
     'react-hooks',
   ],
   settings: {
@@ -35,7 +35,7 @@ module.exports = {
   },
   rules: {
     // prettier rules
-    'prettier/prettier': 'error',
+    // 'prettier/prettier': 'error',
     // @typescript-eslint rules
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/explicit-member-accessibility': [
@@ -57,9 +57,9 @@ module.exports = {
         },
       },
     ],
-    '@typescript-eslint/no-shadow': ['error'],
-    '@typescript-eslint/no-unused-expressions': 'error',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    // '@typescript-eslint/no-shadow': ['error'],
+    // '@typescript-eslint/no-unused-expressions': 'error',
+    // '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/prefer-for-of': 'error',
     '@typescript-eslint/prefer-function-type': 'error',
     '@typescript-eslint/triple-slash-reference': [
@@ -77,23 +77,23 @@ module.exports = {
     // react
     'react/display-name': 'off',
     // eslint common rules
-    'arrow-parens': ['error', 'always'],
-    'comma-dangle': [
-      'error',
-      {
-        arrays: 'always-multiline',
-        functions: 'never',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-      },
-    ],
-    complexity: [
-      'error',
-      {
-        max: 5,
-      },
-    ],
+    // 'arrow-parens': ['error', 'always'],
+    // 'comma-dangle': [
+    //   'error',
+    //   {
+    //     arrays: 'always-multiline',
+    //     functions: 'never',
+    //     objects: 'always-multiline',
+    //     imports: 'always-multiline',
+    //     exports: 'always-multiline',
+    //   },
+    // ],
+    // complexity: [
+    //   'error',
+    //   {
+    //     max: 5,
+    //   },
+    // ],
     eqeqeq: ['error', 'smart'],
     'guard-for-in': 'error',
     'id-denylist': [
@@ -109,45 +109,45 @@ module.exports = {
       'undefined',
     ],
     'import/no-deprecated': 'warn',
-    'import/order': 'error',
+    // 'import/order': 'error',
     'jsdoc/check-alignment': 'error',
     'jsdoc/check-indentation': 'error',
     'jsdoc/newline-after-description': 'error',
     'jsdoc/no-types': 'error',
-    'max-len': [
-      'warn',
-      {
-        code: 120,
-        ignoreComments: true,
-        ignoreTrailingComments: true,
-        ignoreUrls: true,
-        ignoreStrings: true,
-        ignoreTemplateLiterals: true,
-        ignoreRegExpLiterals: true,
-      },
-    ],
-    'newline-per-chained-call': 'off',
+    // 'max-len': [
+    //   'warn',
+    //   {
+    //     code: 120,
+    //     ignoreComments: true,
+    //     ignoreTrailingComments: true,
+    //     ignoreUrls: true,
+    //     ignoreStrings: true,
+    //     ignoreTemplateLiterals: true,
+    //     ignoreRegExpLiterals: true,
+    //   },
+    // ],
+    // 'newline-per-chained-call': 'off',
     'no-bitwise': 'error',
     'no-caller': 'error',
-    'no-console': [
-      'error',
-      {
-        allow: ['warn', 'error', 'info'],
-      },
-    ],
+    // 'no-console': [
+    //   'error',
+    //   {
+    //     allow: ['warn', 'error', 'info'],
+    //   },
+    // ],
     'no-eval': 'error',
-    'no-invalid-this': 'error',
-    'no-magic-numbers': [
-      'error',
-      {
-        ignore: [0, 1, -1, 10],
-      },
-    ],
+    // 'no-invalid-this': 'error',
+    // 'no-magic-numbers': [
+    //   'error',
+    //   {
+    //     ignore: [0, 1, -1, 10],
+    //   },
+    // ],
     'no-new-wrappers': 'error',
     'no-shadow': 'off',
     'no-throw-literal': 'error',
-    'no-unused-expressions': 'error',
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    // 'no-unused-expressions': 'error',
+    // 'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-var': 'error',
     'object-shorthand': 'error',
     'one-var': ['error', 'never'],
@@ -174,13 +174,13 @@ module.exports = {
       },
     ],
     'react/jsx-wrap-multilines': 'off',
-    semi: 'off',
-    'spaced-comment': [
-      'error',
-      'always',
-      {
-        markers: ['/'],
-      },
-    ],
+    // semi: 'off',
+    // 'spaced-comment': [
+    //   'error',
+    //   'always',
+    //   {
+    //     markers: ['/'],
+    //   },
+    // ],
   },
 };

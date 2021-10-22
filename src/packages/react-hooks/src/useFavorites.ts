@@ -12,7 +12,6 @@ export function useFavorites(storageKeyBase: string): [string[], (address: strin
 
   const toggleFavorite = useCallback(
     (address: string): void =>
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       setFavorites((favorites: string[]) =>
         setCache(
           favorites.includes(address)

@@ -15,8 +15,8 @@ function Digits({ className = '', value }: Props): React.ReactElement<Props> {
       {value.split(',').map((parts, index) => (
         <div className="group" key={index}>
           {index !== 0 ? ',' : ''}
-          {parts.split('').map((d, idx) => (
-            <div className="digit" key={idx}>
+          {parts.split('').map((d, index) => (
+            <div className="digit" key={index}>
               {d}
             </div>
           ))}

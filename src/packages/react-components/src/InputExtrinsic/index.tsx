@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsicFunction } from '@polkadot/api/types';
-import React, { useCallback, useState } from 'react';
-import { useApi } from '@polkadot/react-hooks';
 import type { DropdownOptions } from '../util/types';
+
+import React, { useCallback, useState } from 'react';
+
+import { useApi } from '@polkadot/react-hooks';
 
 import methodOptions from './options/method';
 import sectionOptions from './options/section';
@@ -48,7 +50,6 @@ function InputExtrinsic({
 
       // set this via callback, since the we are setting a function (alternatively... we have issues)
       setValue((): SubmittableExtrinsicFunction<'promise'> => newValue);
-      // eslint-disable-next-line
       onChange && onChange(newValue);
     },
     [onChange, value]
@@ -60,7 +61,6 @@ function InputExtrinsic({
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const optionsMethod = methodOptions(api, section);
 
       setOptionsMethod(optionsMethod);

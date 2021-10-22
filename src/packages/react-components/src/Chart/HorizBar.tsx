@@ -1,17 +1,17 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { bnToBn, isNumber } from '@polkadot/util';
-import { ChartData, ChartOptions } from 'chart.js';
-import * as helpers from 'chart.js/helpers';
-import React, { useEffect, useState } from 'react';
-import HorizontalBar from 'react-chartjs-2';
 import type { HorizBarProps, HorizBarValue } from './types';
 
+import ChartJs from 'chart.js';
+import React, { useEffect, useState } from 'react';
+import { HorizontalBar } from 'react-chartjs-2';
+
+import { bnToBn, isNumber } from '@polkadot/util';
+
 interface State {
-  chartData?: ChartData;
-  chartOptions?: ChartOptions;
+  chartData?: ChartJs.ChartData;
+  chartOptions?: ChartJs.ChartOptions;
   jsonValues?: string;
 }
 
@@ -28,7 +28,9 @@ interface Config {
   }[];
 }
 
-const alphaColor = (hexColor: string): string => helpers.color(hexColor).alpha(0.65).rgbString();
+const alphaColor = (hexColor: string): string =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+  ChartJs.helpers.color(hexColor).alpha(0.65).rgbString();
 
 function calculateOptions(
   aspectRatio: number,
@@ -70,8 +72,6 @@ function calculateOptions(
         display: false,
       },
       scales: {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         xAxes: [
           {
             ticks: showLabels ? { beginAtZero: true, max } : { display: false },
@@ -113,7 +113,6 @@ function ChartHorizBar({
   return (
     <div className={className}>
       <HorizontalBar
-        type=""
         data={chartData}
         height={null as unknown as number}
         options={chartOptions}

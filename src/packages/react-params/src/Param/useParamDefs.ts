@@ -1,10 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { getTypeDef } from '@polkadot/types/create';
 import type { Registry, TypeDef } from '@polkadot/types/types';
-import { useEffect, useState } from 'react';
 import type { ParamDef } from '../types';
+
+import { useEffect, useState } from 'react';
+
+import { getTypeDef } from '@polkadot/types/create';
 
 function expandDef(registry: Registry, td: TypeDef): TypeDef {
   try {

@@ -1,17 +1,10 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { SubmittableResult } from '@polkadot/api';
 import type { SubmittableExtrinsic } from '@polkadot/api/promise/types';
 import type { Bytes } from '@polkadot/types';
 import type { DispatchError } from '@polkadot/types/interfaces';
-import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import type { ITuple, Registry, SignerPayloadJSON } from '@polkadot/types/types';
-import React, { useCallback, useRef, useState } from 'react';
-import { getContractAbi } from '../util';
-import { STATUS_COMPLETE } from './constants';
-import { QueueProvider } from './Context';
 import type {
   ActionStatus,
   ActionStatusPartial,
@@ -24,6 +17,15 @@ import type {
   QueueTxStatus,
   SignerCallback,
 } from './types';
+
+import React, { useCallback, useRef, useState } from 'react';
+
+import { SubmittableResult } from '@polkadot/api';
+import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
+
+import { getContractAbi } from '../util';
+import { STATUS_COMPLETE } from './constants';
+import { QueueProvider } from './Context';
 
 export interface Props {
   children: React.ReactNode;
@@ -89,7 +91,6 @@ function extractEvents(result?: SubmittableResult): ActionStatus[] {
       // filter events handled globally, or those we are not interested in, these are
       // handled by the global overview, so don't add them here
       .filter((record): boolean => !!record.event && record.event.section !== 'democracy')
-      // eslint-disable-next-line complexity
       .map(({ event: { data, method, section } }): ActionStatusPartial => {
         if (section === 'system' && method === 'ExtrinsicFailed') {
           const [dispatchError] = data as unknown as ITuple<[DispatchError]>;
@@ -114,7 +115,6 @@ function extractEvents(result?: SubmittableResult): ActionStatus[] {
             status: 'error',
           };
         } else if (section === 'contracts') {
-          // eslint-disable-next-line no-magic-numbers
           if (method === 'ContractExecution' && data.length === 2) {
             // see if we have info for this contract
             const [accountId, encoded] = data;
@@ -195,7 +195,6 @@ function Queue({ children }: Props): React.ReactElement<Props> {
     (_status: ActionStatus | ActionStatus[]): void => {
       const status = Array.isArray(_status) ? _status : [_status];
 
-      // eslint-disable-next-line
       status.length &&
         setStQueue([
           ...stRef.current,
@@ -260,7 +259,6 @@ function Queue({ children }: Props): React.ReactElement<Props> {
         setTimeout((): void => {
           const item = txRef.current.find((item): boolean => item.id === id);
 
-          // eslint-disable-next-line
           item && item.removeItem();
         }, REMOVE_TIMEOUT);
       }

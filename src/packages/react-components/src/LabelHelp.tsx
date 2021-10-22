@@ -21,7 +21,7 @@ function LabelHelp({ className = '', help, icon = 'question-circle' }: Props): R
   const [trigger] = useState(() => `label-help-${++id}`);
 
   return (
-    <div className={`ui--LabelHelp ${className}`}>
+    <div className={`ui--LabelHelp ${className}`} tabIndex={-1}>
       <Icon icon={icon} tooltip={trigger} />
       <Tooltip text={help} trigger={trigger} />
     </div>

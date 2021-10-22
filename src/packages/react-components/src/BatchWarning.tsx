@@ -3,11 +3,11 @@
 
 import React from 'react';
 
-import { isFunction } from '@polkadot/util';
+import { MarkWarning } from '@polkadot/react-components';
 import { useApi } from '@polkadot/react-hooks';
+import { isFunction } from '@polkadot/util';
 
 import { useTranslation } from './translate';
-import { MarkWarning } from '.';
 
 function BatchWarning(): React.ReactElement | null {
   const { t } = useTranslation();

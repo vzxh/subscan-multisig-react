@@ -6,9 +6,9 @@ import type { AnyJson } from '@polkadot/types/types';
 import { Abi } from '@polkadot/api-contract';
 import { api } from '@polkadot/react-api';
 
-import getAddressMeta from './getAddressMeta';
+import { getAddressMeta } from './getAddressMeta';
 
-export default function getContractAbi(address: string | null): Abi | null {
+export function getContractAbi(address: string | null): Abi | null {
   if (!address) {
     return null;
   }
@@ -19,8 +19,6 @@ export default function getContractAbi(address: string | null): Abi | null {
   try {
     const data = meta.contract && (JSON.parse(meta.contract.abi) as AnyJson);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     abi = new Abi(data, api.registry.getChainProperties());
   } catch (error) {
     console.error(error);

@@ -4,11 +4,10 @@
 import type { Hash } from '@polkadot/types/interfaces';
 import type { Codec } from '@polkadot/types/types';
 
-// eslint-disable-next-line
-type AtQuery<I extends any[]> = (hash: string | Uint8Array, ...params: I) => Promise<Codec>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type AtQuery<I extends unknown[]> = (hash: string | Uint8Array, ...params: I) => Promise<Codec>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function getHistoric<T extends Codec, I extends any[] = any[]>(
+export default async function getHistoric<T extends Codec, I extends unknown[] = unknown[]>(
   atQuery: AtQuery<I>,
   params: I,
   hashes: Hash[]

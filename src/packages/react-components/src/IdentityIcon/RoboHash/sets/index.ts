@@ -1517,8 +1517,7 @@ import s013000015 from './set5/007-Accessories/Round-White.png';
 import s013000017 from './set5/007-Accessories/Sunglasses.png';
 import s013000018 from './set5/007-Accessories/Wayfarers.png';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const sets: any[][][] = [
+const sets: unknown[][][] = [
   [
     [
       s000000000,

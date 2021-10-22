@@ -1,6 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
 // Copyright 2017-2021 @polkadot/react-query authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -55,7 +52,8 @@ function BlockAuthorsBase({ children }: Props): React.ReactElement<Props> {
         let lastHeaders: HeaderExtendedWithMapping[] = [];
         let lastBlockAuthors: string[] = [];
         let lastBlockNumber = '';
-        const isAuthorMapping = isFunction(api.query.authorMapping?.mapping);
+        const isAuthorIds = isFunction(api.query.authorMapping?.authorIds); // TODO-MOONBEAM reevaluate in a month: 07/16/21
+        const isAuthorMappingWithDeposit = isFunction(api.query.authorMapping?.mappingWithDeposit);
 
         // subscribe to all validators
         api.query.session &&
@@ -75,7 +73,7 @@ function BlockAuthorsBase({ children }: Props): React.ReactElement<Props> {
               if (lastHeader.author) {
                 thisBlockAuthor = lastHeader.author.toString();
               } else if (
-                isAuthorMapping &&
+                isAuthorMappingWithDeposit &&
                 lastHeader.digest.logs &&
                 lastHeader.digest.logs[0] &&
                 lastHeader.digest.logs[0].isConsensus &&
@@ -83,7 +81,25 @@ function BlockAuthorsBase({ children }: Props): React.ReactElement<Props> {
               ) {
                 // Some blockchains such as Moonbeam need to fetch the author accountId from a mapping
                 thisBlockAuthor = (
-                  await api.query.authorMapping.mapping(lastHeader.digest.logs[0].asConsensus[1])
+                  (
+                    await api.query.authorMapping.mappingWithDeposit(lastHeader.digest.logs[0].asConsensus[1])
+                  ).toHuman() as {
+                    account: string;
+                    deposit: string;
+                  }
+                ).account;
+                lastHeader.authorFromMapping = thisBlockAuthor;
+              } else if (
+                isAuthorIds &&
+                lastHeader.digest.logs &&
+                lastHeader.digest.logs[0] &&
+                lastHeader.digest.logs[0].isConsensus &&
+                lastHeader.digest.logs[0].asConsensus[1]
+              ) {
+                // TODO-MOONBEAM reevaluate in a month: 07/16/21
+                // Some blockchains such as Moonbeam need to fetch the author accountId from a mapping (function call may differ according to pallet version)
+                thisBlockAuthor = (
+                  await api.query.authorMapping.authorIds(lastHeader.digest.logs[0].asConsensus[1])
                 ).toString();
                 lastHeader.authorFromMapping = thisBlockAuthor;
               }

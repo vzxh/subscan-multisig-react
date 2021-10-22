@@ -1,9 +1,9 @@
 // Copyright 2017-2021 @polkadot/react-api authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { OnChangeCb } from '../types';
 
 import React from 'react';
-import type { OnChangeCb } from '../types';
 
 export type Transform = (value: any, index: number) => any;
 
@@ -18,9 +18,9 @@ export interface Options {
   callOnResult?: OnChangeCb;
   fallbacks?: string[];
   isMulti?: boolean;
-  params?: any[];
+  params?: unknown[];
   paramName?: string;
-  paramPick?: (props: any) => any;
+  paramPick?: (props: any) => unknown;
   paramValid?: boolean;
   propName?: string;
   skipIf?: (props: any) => boolean;
@@ -30,13 +30,13 @@ export interface Options {
 
 export type RenderFn = (value?: any) => React.ReactNode;
 
-export type StorageTransform = (input: any, index: number) => any | null;
+export type StorageTransform = (input: any, index: number) => unknown | null;
 
 export type HOC = (
-  Component: React.ComponentType<any>,
+  Component: React.ComponentType<unknown>,
   defaultProps?: DefaultProps,
   render?: RenderFn
-) => React.ComponentType<any>;
+) => React.ComponentType<unknown>;
 
 export interface ApiMethod {
   name: string;

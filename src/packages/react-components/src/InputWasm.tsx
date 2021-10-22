@@ -1,9 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { compactAddLength, isWasm } from '@polkadot/util';
-import React, { useCallback } from 'react';
 import type { InputFilePropsBase } from './InputFile';
+
+import React, { useCallback } from 'react';
+
+import { compactAddLength, isWasm } from '@polkadot/util';
+
 import InputFile from './InputFile';
 
 interface Props extends InputFilePropsBase {

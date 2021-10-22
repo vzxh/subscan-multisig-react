@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { DeriveAccountFlags, DeriveAccountInfo } from '@polkadot/api-derive/types';
 import type { Nominations, ValidatorPrefs } from '@polkadot/types/interfaces';
-import { keyring } from '@polkadot/ui-keyring';
 import type { KeyringJson$Meta } from '@polkadot/ui-keyring/types';
-import { isFunction } from '@polkadot/util';
-import { useCallback, useEffect, useState } from 'react';
 import type { AddressFlags, AddressIdentity, UseAccountInfo } from './types';
+
+import { useCallback, useEffect, useState } from 'react';
+
+import { keyring } from '@polkadot/ui-keyring';
+import { isFunction } from '@polkadot/util';
+
 import { useAccounts } from './useAccounts';
 import { useAddresses } from './useAddresses';
 import { useApi } from './useApi';
@@ -50,11 +51,10 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
   const [identity, setIdentity] = useState<AddressIdentity | undefined>();
   const [flags, setFlags] = useState<AddressFlags>(IS_NONE);
   const [meta, setMeta] = useState<KeyringJson$Meta | undefined>();
-  const [isEditingName, toggleIsEditingName] = useToggle();
-  const [isEditingTags, toggleIsEditingTags] = useToggle();
+  const [isEditingName, toggleIsEditingName, setIsEditingName] = useToggle();
+  const [isEditingTags, toggleIsEditingTags, setIsEditingTags] = useToggle();
 
   useEffect((): void => {
-    // eslint-disable-next-line
     validator &&
       setFlags((flags) => ({
         ...flags,
@@ -63,7 +63,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
   }, [validator]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     nominator &&
       setFlags((flags) => ({
         ...flags,
@@ -72,7 +71,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
   }, [nominator]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     accountFlags &&
       setFlags((flags) => ({
         ...flags,
@@ -101,19 +99,11 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
     if (identity) {
       const judgements = identity.judgements.filter(([, judgement]) => !judgement.isFeePaid);
       const isKnownGood = judgements.some(([, judgement]) => judgement.isKnownGood);
-      const isReasonable = judgements.some(([, judgement]) => judgement.isReasonable);
-      const isErroneous = judgements.some(([, judgement]) => judgement.isErroneous);
-      const isLowQuality = judgements.some(([, judgement]) => judgement.isLowQuality);
 
       setIdentity({
         ...identity,
-        isBad: isErroneous || isLowQuality,
-        isErroneous,
         isExistent: !!identity.display,
-        isGood: isKnownGood || isReasonable,
         isKnownGood,
-        isLowQuality,
-        isReasonable,
         judgements,
         waitCount: identity.judgements.length - judgements.length,
       });
@@ -180,7 +170,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
       try {
         const pair = keyring.getPair(value);
 
-        // eslint-disable-next-line
         pair && keyring.saveAccountMeta(pair, meta);
       } catch (error) {
         const pair = keyring.getAddress(value);
@@ -202,7 +191,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
         if (value) {
           const originalMeta = keyring.getAddress(value)?.meta;
 
-          // eslint-disable-next-line
           value && keyring.saveContract(value, { ...originalMeta, ...meta });
         }
       } catch (error) {
@@ -212,7 +200,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
       try {
         const currentKeyring = keyring.getPair(value);
 
-        // eslint-disable-next-line
         currentKeyring && keyring.saveAccountMeta(currentKeyring, meta);
       } catch (error) {
         keyring.saveAddress(value, meta);
@@ -230,7 +217,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
     }
 
     try {
-      // eslint-disable-next-line
       value && keyring.forgetAddress(value);
     } catch (e) {
       console.error(e);
@@ -242,7 +228,6 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
       if (value) {
         const account = keyring.getPair(value);
 
-        // eslint-disable-next-line
         account && keyring.saveAccountMeta(account, { ...account.meta, genesisHash });
 
         setGenesisHash(genesisHash);
@@ -253,11 +238,14 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
 
   const setTags = useCallback((tags: string[]): void => setSortedTags(tags.sort()), []);
 
+  const isEditing = useCallback(() => isEditingName || isEditingTags, [isEditingName, isEditingTags]);
+
   return {
     accountIndex,
     flags,
     genesisHash,
     identity,
+    isEditing,
     isEditingName,
     isEditingTags,
     isNull: !value,
@@ -267,6 +255,8 @@ export function useAccountInfo(value: string | null, isContract = false): UseAcc
     onSaveName,
     onSaveTags,
     onSetGenesisHash,
+    setIsEditingName,
+    setIsEditingTags,
     setName,
     setTags,
     tags,

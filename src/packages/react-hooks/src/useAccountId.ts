@@ -10,11 +10,9 @@ export function useAccountId(
   const [accountId, setAccountId] = useState<string | null>(initialValue);
 
   const _setAccountId = useCallback(
-    // eslint-disable-next-line
     (accountId: string | null = null): void => {
       setAccountId(accountId);
 
-      // eslint-disable-next-line
       onChangeAccountId && onChangeAccountId(accountId);
     },
     [onChangeAccountId]

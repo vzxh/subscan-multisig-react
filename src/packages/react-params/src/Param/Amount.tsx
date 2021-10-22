@@ -2,13 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type BN from 'bn.js';
+import type { Props } from '../types';
 
 import React, { useCallback, useMemo } from 'react';
 
-import { ClassOf } from '@polkadot/types/create';
+import { Input, InputNumber } from '@polkadot/react-components';
 import { bnToBn, formatNumber, isUndefined } from '@polkadot/util';
-import { Input, InputNumber } from '../../../react-components/src';
-import type { Props } from '../types';
 
 import Bare from './Bare';
 
@@ -27,7 +26,7 @@ function Amount({
   const defaultValue = useMemo(
     () =>
       isDisabled
-        ? value instanceof ClassOf(registry, 'AccountIndex')
+        ? value instanceof registry.createClass('AccountIndex')
           ? value.toString()
           : formatNumber(value as number)
         : bnToBn((value as number) || 0).toString(),
@@ -38,17 +37,16 @@ function Amount({
     try {
       return registry.createType(type.type as 'u32').bitLength();
     } catch (error) {
-      // eslint-disable-next-line no-magic-numbers
       return 32;
     }
   }, [registry, type]);
 
   const _onChange = useCallback(
-    (val?: BN) =>
+    (value?: BN) =>
       onChange &&
       onChange({
-        isValid: !isUndefined(val),
-        value: val,
+        isValid: !isUndefined(value),
+        value,
       }),
     [onChange]
   );

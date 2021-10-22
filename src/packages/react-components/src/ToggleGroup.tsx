@@ -4,7 +4,7 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
-import { Button } from '.';
+import { Button } from '@polkadot/react-components';
 
 interface Props {
   className?: string;
@@ -23,7 +23,6 @@ interface ToggleProps {
 
 function ToggleIndex({ index, isDisabled, isSelected, onChange, text }: ToggleProps): React.ReactElement<ToggleProps> {
   const _onClick = useCallback((): void => {
-    // eslint-disable-next-line
     !isDisabled && onChange(index);
   }, [isDisabled, index, onChange]);
 

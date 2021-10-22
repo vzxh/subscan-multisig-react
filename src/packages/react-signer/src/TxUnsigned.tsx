@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import React, { useCallback, useContext } from 'react';
-import type { QueueTx, QueueTxMessageSetStatus } from '../../react-components/src/Status/types';
+import type { QueueTx, QueueTxMessageSetStatus } from '@polkadot/react-components/Status/types';
 
-import { Button, ErrorBoundary, Modal, StatusContext } from '../../react-components/src';
-import { useToggle } from '../../react-hooks/src';
+import React, { useCallback, useContext } from 'react';
+
+import { Button, ErrorBoundary, Modal, StatusContext } from '@polkadot/react-components';
+import { useToggle } from '@polkadot/react-hooks';
 
 import Transaction from './Transaction';
 import { useTranslation } from './translate';
@@ -17,14 +18,11 @@ interface Props {
   currentItem: QueueTx;
 }
 
-const NOOP = () => undefined;
-
 async function send(
   queueSetTxStatus: QueueTxMessageSetStatus,
   currentItem: QueueTx,
   tx: SubmittableExtrinsic<'promise'>
 ): Promise<void> {
-  // eslint-disable-next-line
   currentItem.txStartCb && currentItem.txStartCb();
 
   try {
@@ -35,9 +33,8 @@ async function send(
     );
   } catch (error) {
     console.error('send: error:', error);
-    queueSetTxStatus(currentItem.id, 'error', {}, error);
+    queueSetTxStatus(currentItem.id, 'error', {}, error as Error);
 
-    // eslint-disable-next-line
     currentItem.txFailedCb && currentItem.txFailedCb(null);
   }
 }
@@ -46,14 +43,6 @@ function TxUnsigned({ className, currentItem }: Props): React.ReactElement<Props
   const { t } = useTranslation();
   const { queueSetTxStatus } = useContext(StatusContext);
   const [isRenderError, toggleRenderError] = useToggle();
-
-  const _onCancel = useCallback((): void => {
-    const { id, signerCb = NOOP, txFailedCb = NOOP } = currentItem;
-
-    queueSetTxStatus(id, 'cancelled');
-    signerCb(id, null);
-    txFailedCb(null);
-  }, [currentItem, queueSetTxStatus]);
 
   const _onSend = useCallback(async (): Promise<void> => {
     if (currentItem.extrinsic) {
@@ -68,7 +57,7 @@ function TxUnsigned({ className, currentItem }: Props): React.ReactElement<Props
           <Transaction currentItem={currentItem} onError={toggleRenderError} />
         </ErrorBoundary>
       </Modal.Content>
-      <Modal.Actions onCancel={_onCancel}>
+      <Modal.Actions>
         <Button
           icon="sign-in-alt"
           isDisabled={isRenderError}

@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -48,9 +47,10 @@ function CardSummary({ children, className = '', help, label, progress }: Props)
   }
 
   const isTimed = progress && progress.withTime && !isUndefined(progress.total);
+  const testidSuffix = (label ?? '').toString();
 
   return (
-    <article className={className}>
+    <article className={className} data-testid={`card-summary:${testidSuffix}`}>
       <Labelled help={help} isSmall label={label}>
         {children}
         {progress && !progress.hideValue && (

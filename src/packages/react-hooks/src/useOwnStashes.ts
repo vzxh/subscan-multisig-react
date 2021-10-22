@@ -20,7 +20,6 @@ function getStashes(
   const result: [string, IsInKeyring][] = [];
 
   ownBonded.forEach((value, index): void => {
-    // eslint-disable-next-line
     value.isSome && result.push([allAccounts[index], true]);
   });
 
@@ -28,7 +27,6 @@ function getStashes(
     if (ledger.isSome) {
       const stashId = ledger.unwrap().stash.toString();
 
-      // eslint-disable-next-line
       !result.some(([accountId]) => accountId === stashId) && result.push([stashId, false]);
     }
   });

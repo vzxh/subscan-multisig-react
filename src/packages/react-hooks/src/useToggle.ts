@@ -14,14 +14,11 @@ export function useToggle(
   const [isActive, setActive] = useState(defaultValue);
 
   const _toggleActive = useCallback((): void => {
-    // eslint-disable-next-line
     mountedRef.current && setActive((isActive) => !isActive);
   }, [mountedRef]);
 
   const _setActive = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     (isActive: boolean): void => {
-      // eslint-disable-next-line
       mountedRef.current && setActive(isActive);
     },
     [mountedRef]

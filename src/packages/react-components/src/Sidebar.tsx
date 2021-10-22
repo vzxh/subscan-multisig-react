@@ -10,17 +10,26 @@ interface Props {
   button?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  dataTestId?: string;
   offset?: number | string;
   onClose: () => void;
   position: 'left' | 'right';
+  sidebarRef: React.RefObject<HTMLDivElement>;
 }
 
-function Sidebar({ button, children, className = '', onClose }: Props): React.ReactElement<Props> {
+function Sidebar({
+  button,
+  children,
+  className = '',
+  dataTestId = '',
+  onClose,
+  sidebarRef,
+}: Props): React.ReactElement<Props> {
   return (
-    <div className={`ui--Sidebar ${className}`}>
+    <div className={`ui--Sidebar ${className}`} data-testid={dataTestId} ref={sidebarRef}>
       <Button.Group className="ui--Sidebar-buttons">
         {button}
-        <Button icon="times" isBasic isCircular onClick={onClose} />
+        <Button dataTestId="close-sidebar-button" icon="times" isBasic isCircular onClick={onClose} />
       </Button.Group>
       {children}
     </div>

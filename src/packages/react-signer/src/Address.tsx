@@ -1,24 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { QueueTx } from '@polkadot/react-components/Status/types';
 import type { Option, Vec } from '@polkadot/types';
 import type { AccountId, BalanceOf, Call, Multisig, ProxyDefinition, ProxyType } from '@polkadot/types/interfaces';
 import type { ITuple } from '@polkadot/types/types';
+import type { AddressFlags, AddressProxy } from './types';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ApiPromise } from '@polkadot/api';
+import { InputAddress, MarkError, Modal, Toggle } from '@polkadot/react-components';
+import { useAccounts, useApi, useIsMountedRef } from '@polkadot/react-hooks';
 import { isFunction } from '@polkadot/util';
-import { InputAddress, MarkError, Modal, Toggle } from '../../react-components/src';
-import { useAccounts, useApi, useIsMountedRef } from '../../react-hooks/src';
-import type { QueueTx } from '../../react-components/src/Status/types';
-import type { AddressFlags, AddressProxy } from './types';
 
 import Password from './Password';
 import { useTranslation } from './translate';
@@ -334,7 +329,7 @@ function Address({ currentItem, onChange, onEnter, passwordError, requestAddress
             className="tipToggle"
             isDisabled={proxyInfo.isProxied}
             label={
-              isProxyActive ? t<string>('Use a proxy for this call') : t<string>(`Don't use a proxy for this call`)
+              isProxyActive ? t<string>('Use a proxy for this call') : t<string>('Don\'t use a proxy for this call')
             }
             onChange={setIsProxyActive}
             value={isProxyActive}

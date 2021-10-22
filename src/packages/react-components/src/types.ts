@@ -1,13 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconName } from '@fortawesome/fontawesome-svg-core';
-import type { Abi } from '@polkadot/api-contract';
-import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import type { AccountId, Index } from '@polkadot/types/interfaces';
 import type { WithTranslation } from 'react-i18next';
-import type { ActionStatus, TxCallback, TxFailedCallback } from './Status/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Abi } from '@polkadot/api-contract';
+import type { ActionStatus } from '@polkadot/react-components/Status/types';
+import type { AccountId, Index } from '@polkadot/types/interfaces';
+import type { TxCallback, TxFailedCallback } from './Status/types';
+
+import { AccountIndex, Address } from '@polkadot/types/interfaces';
 
 export interface BareProps {
   children?: React.ReactNode;
@@ -42,14 +44,13 @@ export interface TxButtonProps {
   onStart?: () => void;
   onSuccess?: TxCallback;
   onUpdate?: TxCallback;
-  params?: any[] | (() => any[]) | null;
+  params?: unknown[] | (() => unknown[]) | null;
   tooltip?: string;
   tx?: ((...args: any[]) => SubmittableExtrinsic<'promise'>) | null;
   withoutLink?: boolean;
   withSpinner?: boolean;
 }
 
-// eslint-disable-next-line no-magic-numbers
 export type BitLength = 8 | 16 | 32 | 64 | 128 | 256;
 
 interface ContractBase {
@@ -78,3 +79,9 @@ export interface ThemeDef {
 export interface ThemeProps {
   theme: ThemeDef;
 }
+
+export type FlagColor = 'blue' | 'green' | 'grey' | 'orange' | 'pink' | 'red' | 'yellow' | 'theme';
+
+export type AccountIdIsh = AccountId | AccountIndex | Address | string | Uint8Array | null;
+
+export type DisplayedJudgement = 'Erroneous' | 'Low quality' | 'Known good' | 'Reasonable';

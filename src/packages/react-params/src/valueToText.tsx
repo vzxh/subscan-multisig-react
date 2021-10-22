@@ -7,7 +7,7 @@ import type { Codec } from '@polkadot/types/types';
 import React from 'react';
 
 import { Option, Raw } from '@polkadot/types';
-import { isFunction, isNull, isUndefined, u8aToHex } from '@polkadot/util';
+import { isFunction, isNull, isUndefined, stringify, u8aToHex } from '@polkadot/util';
 
 interface DivProps {
   className?: string;
@@ -23,26 +23,24 @@ function div({ className = '', key }: DivProps, ...values: React.ReactNode[]): R
 }
 
 function formatKeys(keys: [ValidatorId, Keys][]): string {
-  return JSON.stringify(keys.map(([validator, data]): [string, string] => [validator.toString(), data.toHex()]));
+  return JSON.stringify(keys.map(([validator, keys]): [string, string] => [validator.toString(), keys.toHex()]));
 }
 
 function toHuman(value: Codec | Codec[]): unknown {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  return isFunction((value as Codec).toHuman) ? (value as Codec).toHuman() : (value as Codec[]).map(toHuman);
+  return isFunction((value as Codec).toHuman)
+    ? (value as Codec).toHuman()
+    : Array.isArray(value)
+    ? value.map((v) => toHuman(v))
+    : value.toString();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toString(value: any): string {
-  // eslint-disable-next-line no-magic-numbers
-  return JSON.stringify(value, null, 2).replace(/"/g, '').replace(/\\/g, '').replace(/\],\[/g, '],\n[');
+export function toHumanJson(value: any): string {
+  return stringify(value, 2).replace(/,\n/g, '\n').replace(/"/g, '').replace(/\\/g, '').replace(/\],\[/g, '],\n[');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// eslint-disable-next-line complexity
 export default function valueToText(
   type: string,
   value: Codec | undefined | null,
-  _swallowError = true,
   contentShorten = true
 ): React.ReactNode {
   if (isNull(value) || isUndefined(value)) {
@@ -52,18 +50,17 @@ export default function valueToText(
   return div(
     {},
     ['Bytes', 'Raw', 'Option<Keys>', 'Keys'].includes(type) && isFunction(value.toU8a)
-      ? // eslint-disable-next-line no-magic-numbers
-        u8aToHex(value.toU8a(true), contentShorten ? 512 : -1)
+      ? u8aToHex(value.toU8a(true), contentShorten ? 512 : -1)
       : // HACK Handle Keys as hex-only (this should go away once the node value is
       // consistently swapped to `Bytes`)
       type === 'Vec<(ValidatorId,Keys)>'
-      ? toString(formatKeys(value as unknown as [ValidatorId, Keys][]))
+      ? toHumanJson(formatKeys(value as unknown as [ValidatorId, Keys][]))
       : value instanceof Raw
       ? value.isEmpty
         ? '<empty>'
         : value.toString()
       : value instanceof Option && value.isNone
       ? '<none>'
-      : toString(toHuman(value))
+      : toHumanJson(toHuman(value))
   );
 }

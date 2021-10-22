@@ -10,7 +10,6 @@ import { isString } from '@polkadot/util';
 import { useIsMountedRef } from './useIsMountedRef';
 
 function disconnect(api: ApiPromise | null): void {
-  // eslint-disable-next-line
   api && api.disconnect().catch(console.error);
 }
 
@@ -41,7 +40,6 @@ export function useApiUrl(url?: string | string[]): ApiPromise | null {
   useEffect((): void => {
     _setApi(null);
 
-    // eslint-disable-next-line
     url &&
       (isString(url) || url.length) &&
       ApiPromise.create({

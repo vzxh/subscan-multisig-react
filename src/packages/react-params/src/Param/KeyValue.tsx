@@ -1,11 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { compactAddLength, hexToU8a, u8aConcat } from '@polkadot/util';
 import type { Props } from '../types';
 
-import { Input } from '../../../react-components/src';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import { Input } from '@polkadot/react-components';
+import { compactAddLength, hexToU8a, u8aConcat } from '@polkadot/util';
 
 import Bare from './Bare';
 
@@ -47,7 +48,6 @@ function KeyValue({
   useEffect((): void => {
     const isValid = key.isValid && value.isValid;
 
-    // eslint-disable-next-line
     onChange &&
       onChange({
         isValid,
@@ -56,8 +56,8 @@ function KeyValue({
     setIsValid(isValid);
   }, [key, onChange, value]);
 
-  const _onChangeKey = useCallback((k: string): void => setKey(createParam(k)), []);
-  const _onChangeValue = useCallback((val: string): void => setValue(createParam(val)), []);
+  const _onChangeKey = useCallback((key: string): void => setKey(createParam(key)), []);
+  const _onChangeValue = useCallback((value: string): void => setValue(createParam(value)), []);
 
   return (
     <Bare className={className}>

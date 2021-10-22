@@ -1,17 +1,17 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useState } from 'react';
-import { u8aToHex } from '@polkadot/util';
 import type { Props } from '../types';
 
-import { Toggle } from '../../../react-components/src';
+import React, { useCallback, useState } from 'react';
+
+import { Toggle } from '@polkadot/react-components';
+import { u8aToHex } from '@polkadot/util';
 
 import { useTranslation } from '../translate';
 import BaseBytes from './BaseBytes';
 import File from './File';
 
-// eslint-disable-next-line complexity
 function Hash256({
   className = '',
   defaultValue,
@@ -36,7 +36,6 @@ function Hash256({
       const value = registry.hash(u8a);
 
       setPlaceholder(u8aToHex(value));
-      // eslint-disable-next-line
       onChange &&
         onChange({
           isValid: true,

@@ -14,7 +14,6 @@ const defaultValidate = (): boolean => true;
 export function useFormField<T>(defaultValue: T | null, validate: ValidateFn<T> = defaultValidate): FormField<T> {
   const [value, setValue] = useState<T | null>(defaultValue);
   const isValid = useMemo(() => !!value && validate(value), [validate, value]);
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const setter = useCallback((value?: T | null) => !isUndefined(value) && setValue(value), []);
 
   return [value, isValid, setter];

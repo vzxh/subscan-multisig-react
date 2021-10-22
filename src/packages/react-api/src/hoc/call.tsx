@@ -1,6 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-api authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,23 +9,26 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { assert, isNull, isUndefined } from '@polkadot/util';
+import type { ApiProps, CallState as State, OnChangeCb, SubtractProps } from '../types';
+import type { Options } from './types';
+
 import React from 'react';
+
+import { assert, isNull, isUndefined } from '@polkadot/util';
+
 import echoTransform from '../transform/echo';
-import type { ApiProps, CallState as State, SubtractProps } from '../types';
 import { isEqual, triggerChange } from '../util';
 import withApi from './api';
-import type { Options } from './types';
 
 // FIXME This is not correct, we need some junction of derive, query & consts
 interface Method {
-  (...params: any[]): Promise<any>;
-  at: (hash: Uint8Array | string, ...params: any[]) => Promise<any>;
+  (...params: unknown[]): Promise<any>;
+  at: (hash: Uint8Array | string, ...params: unknown[]) => Promise<any>;
   meta: any;
-  multi: (params: any[], cb: (value?: any) => void) => Promise<any>;
+  multi: (params: unknown[], cb: (value?: any) => void) => Promise<any>;
 }
 
-type ApiMethodInfo = [Method, any[], string];
+type ApiMethodInfo = [Method, unknown[], string];
 
 const NOOP = (): void => {
   // ignore
@@ -59,7 +59,7 @@ export default function withCall<P extends ApiProps>(
 ): (Inner: React.ComponentType<ApiProps>) => React.ComponentType<any> {
   return (Inner: React.ComponentType<ApiProps>): React.ComponentType<SubtractProps<P, ApiProps>> => {
     class WithPromise extends React.Component<P, State> {
-      public state: State = {
+      public override state: State = {
         callResult: undefined,
         callUpdated: false,
         callUpdatedAt: 0,
@@ -81,7 +81,7 @@ export default function withCall<P extends ApiProps>(
         this.propName = `${section}_${method}`;
       }
 
-      public componentDidUpdate(prevProps: any): void {
+      public override componentDidUpdate(prevProps: any): void {
         const oldParams = this.getParams(prevProps);
         const newParams = this.getParams(this.props);
 
@@ -90,7 +90,7 @@ export default function withCall<P extends ApiProps>(
         }
       }
 
-      public componentDidMount(): void {
+      public override componentDidMount(): void {
         this.isActive = true;
 
         if (withIndicator) {
@@ -111,7 +111,7 @@ export default function withCall<P extends ApiProps>(
         }, 0);
       }
 
-      public componentWillUnmount(): void {
+      public override componentWillUnmount(): void {
         this.isActive = false;
 
         this.unsubscribe().then(NOOP).catch(NOOP);
@@ -127,7 +127,7 @@ export default function withCall<P extends ApiProps>(
         }
       }
 
-      private getParams(props: any): [boolean, any[]] {
+      private getParams(props: any): [boolean, unknown[]] {
         const paramValue = paramPick ? paramPick(props) : paramName ? props[paramName] : undefined;
 
         if (atProp) {
@@ -147,9 +147,7 @@ export default function withCall<P extends ApiProps>(
         return [true, values];
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       private constructApiSection = (endpoint: string): [Record<string, Method>, string, string, string] => {
-        // eslint-disable-next-line no-invalid-this
         const { api } = this.props;
         const [area, section, method, ...others] = endpoint.split('.');
 
@@ -161,24 +159,22 @@ export default function withCall<P extends ApiProps>(
           ['consts', 'rpc', 'query', 'derive'].includes(area),
           `Unknown api.${area}, expected consts, rpc, query or derive`
         );
-        assert(!at || area === 'query', `Only able to do an 'at' query on the api.query interface`);
+        assert(!at || area === 'query', 'Only able to do an \'at\' query on the api.query interface');
 
         const apiSection = (api as any)[area][section];
 
         return [apiSection, area, section, method];
       };
 
-      private getApiMethod(newParams: any[]): ApiMethodInfo {
+      private getApiMethod(newParams: unknown[]): ApiMethodInfo {
         if (endpoint === 'subscribe') {
-          // eslint-disable-next-line @typescript-eslint/no-shadow
           const [fn, ...params] = newParams;
 
-          return [fn, params, 'subscribe'];
+          return [fn as Method, params, 'subscribe'];
         }
 
-        const endpoints: string[] = [endpoint].concat(fallbacks || []);
+        const endpoints = [endpoint].concat(fallbacks || []);
         const expanded = endpoints.map(this.constructApiSection);
-        // eslint-disable-next-line @typescript-eslint/no-shadow
         const [apiSection, area, section, method] = expanded.find(([apiSection]): boolean => !!apiSection) || [
           {},
           expanded[0][1],
@@ -202,7 +198,7 @@ export default function withCall<P extends ApiProps>(
         return [apiSection[method], newParams, method.startsWith('subscribe') ? 'subscribe' : area];
       }
 
-      private async subscribe([isValid, newParams]: [boolean, any[]]): Promise<void> {
+      private async subscribe([isValid, newParams]: [boolean, unknown[]]): Promise<void> {
         if (!isValid || skipIf(this.props)) {
           return;
         }
@@ -230,7 +226,6 @@ export default function withCall<P extends ApiProps>(
           return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-shadow
         const [apiMethod, params, area] = info;
         const updateCb = (value?: any): void => this.triggerUpdate(this.props, value);
 
@@ -265,7 +260,7 @@ export default function withCall<P extends ApiProps>(
             return;
           }
 
-          triggerChange(callResult, callOnResult, props.callOnResult);
+          triggerChange(callResult as OnChangeCb, callOnResult, props.callOnResult as OnChangeCb);
 
           this.nextState({
             callResult,
@@ -277,7 +272,7 @@ export default function withCall<P extends ApiProps>(
         }
       }
 
-      public render(): React.ReactNode {
+      public override render(): React.ReactNode {
         const { callResult, callUpdated, callUpdatedAt } = this.state;
         const _props = {
           ...this.props,

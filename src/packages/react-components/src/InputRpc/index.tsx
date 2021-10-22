@@ -4,9 +4,11 @@
 // TODO: We have a lot shared between this and InputExtrinsic & InputStorage
 
 import type { DefinitionRpcExt } from '@polkadot/types/types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useApi } from '@polkadot/react-hooks';
 import type { DropdownOptions } from '../util/types';
+
+import React, { useCallback, useEffect, useState } from 'react';
+
+import { useApi } from '@polkadot/react-hooks';
 
 import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
 import methodOptions from './options/method';
@@ -42,7 +44,6 @@ function InputRpc({
   const [value, setValue] = useState<DefinitionRpcExt>((): DefinitionRpcExt => defaultValue);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     onChange && onChange(value);
   }, [onChange, value]);
 
@@ -64,10 +65,10 @@ function InputRpc({
         return;
       }
 
-      const result = methodOptions(api, rpcs, section);
+      const optionsMethod = methodOptions(api, rpcs, section);
 
-      setOptionsMethod(result);
-      _onMethodChange(rpcs[section][result[0].value]);
+      setOptionsMethod(optionsMethod);
+      _onMethodChange(rpcs[section][optionsMethod[0].value]);
     },
     [_onMethodChange, api, rpcs, value]
   );

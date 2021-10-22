@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/app-democracy authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

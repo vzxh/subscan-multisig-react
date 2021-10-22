@@ -30,14 +30,12 @@ export function getAllRpc(
   chain: Text,
   { specName }: RuntimeVersion
 ): Record<string, Record<string, DefinitionRpcExt>> {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   return Object.entries(getSpecRpc(registry, chain, specName)).reduce(
     (
       all: Record<string, Record<string, DefinitionRpcExt>>,
       [section, contents]
     ): Record<string, Record<string, DefinitionRpcExt>> => {
-      all[section] = all[section] ?? toExt(section, contents);
+      all[section] ??= toExt(section, contents);
 
       return all;
     },

@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SiDef } from '@polkadot/util/types';
+import type { BitLength } from './types';
 
 import BN from 'bn.js';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
+import { BitLengthOption } from '@polkadot/react-components/constants';
 import { formatBalance, isUndefined } from '@polkadot/util';
-import { BitLengthOption } from './constants';
-import type { BitLength } from './types';
 
 import InputNumber from './InputNumber';
 
@@ -50,7 +50,7 @@ function reformat(value?: string | BN, isDisabled?: boolean, siDecimals?: number
   const si = isDisabled ? formatBalance.calcSi(value.toString(), decimals) : formatBalance.findSi('-');
 
   return [
-    formatBalance(value, { decimals, forceUnit: si.value, withSi: false }).replace(',', isDisabled ? ',' : ''),
+    formatBalance(value, { decimals, forceUnit: si.value, withSi: false }).replace(/,/g, isDisabled ? ',' : ''),
     si,
   ];
 }

@@ -3,13 +3,12 @@
 
 import React from 'react';
 
-import { InputFile } from '../../../react-components/src';
+import { InputFile } from '@polkadot/react-components';
 
 import Bare from './Bare';
 
 interface Props {
   className?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any;
   isDisabled?: boolean;
   isError?: boolean;

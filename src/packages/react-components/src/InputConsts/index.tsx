@@ -1,16 +1,16 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ConstantCodec } from '@polkadot/metadata/decorate/types';
+import type { ConstantCodec } from '@polkadot/types/metadata/decorate/types';
+import type { DropdownOptions } from '../util/types';
+import type { ConstValue, ConstValueBase } from './types';
 
 import React, { useCallback, useState } from 'react';
 
 import { ApiPromise } from '@polkadot/api';
 import { useApi } from '@polkadot/react-hooks';
-import type { DropdownOptions } from '../util/types';
 
 import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
-import type { ConstValue, ConstValueBase } from './types';
 import keyOptions from './options/key';
 import sectionOptions from './options/section';
 import SelectKey from './SelectKey';
@@ -62,7 +62,6 @@ function InputConsts({
       const updated = { meta, method, section };
 
       setValue(updated);
-      // eslint-disable-next-line
       onChange && onChange(updated);
     },
     [api, onChange, value]
@@ -74,7 +73,6 @@ function InputConsts({
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const optionsMethod = keyOptions(api, section);
 
       setOptionsMethod(optionsMethod);

@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -93,9 +90,7 @@ function InputFile({
             const name = file.name;
             const data = convertResult(target.result as ArrayBuffer);
 
-            // eslint-disable-next-line
             onChange && onChange(data, name);
-            // eslint-disable-next-line
             dropRef &&
               setFile({
                 name,
@@ -112,7 +107,7 @@ function InputFile({
 
   const dropZone = (
     <Dropzone accept={accept} disabled={isDisabled} multiple={false} onDrop={_onDrop} ref={dropRef}>
-      {({ getInputProps, getRootProps }: Record<string, any>): JSX.Element => (
+      {({ getInputProps, getRootProps }): JSX.Element => (
         <div {...getRootProps({ className: `ui--InputFile${isError ? ' error' : ''} ${className}` })}>
           <input {...getInputProps()} />
           <em className="label">
@@ -142,7 +137,7 @@ function InputFile({
 
 export default React.memo(styled(InputFile)`
   background: var(--bg-input);
-  border: 1px solid rgba(34, 36, 38, 0.15);
+  border: 1px solid var(--border-input);
   border-radius: 0.28571429rem;
   font-size: 1rem;
   margin: 0.25rem 0;

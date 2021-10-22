@@ -1,17 +1,18 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-// import type { DecodedEvent } from '@polkadot/api-contract/types';
-import { Params } from '@polkadot/react-params';
+import type { DecodedEvent } from '@polkadot/api-contract/types';
 import type { Bytes } from '@polkadot/types';
-import { getTypeDef } from '@polkadot/types';
 import type { Event } from '@polkadot/types/interfaces';
 import type { Codec } from '@polkadot/types/types';
+
 import React, { useMemo } from 'react';
+
+import { Input } from '@polkadot/react-components';
+import Params from '@polkadot/react-params';
+
 import { useTranslation } from './translate';
 import { getContractAbi } from './util';
-import { Input } from '.';
 
 export interface Props {
   children?: React.ReactNode;
@@ -24,21 +25,17 @@ interface Value {
   value: Codec;
 }
 
-interface AbiEvent {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  event: any;
+interface AbiEvent extends DecodedEvent {
   values: Value[];
 }
 
 function EventDisplay({ children, className = '', value }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
-  const params = value.typeDef.map(({ type }) => ({ type: getTypeDef(type) }));
+  const params = value.typeDef.map((type) => ({ type }));
   const values = value.data.map((value) => ({ isValid: true, value }));
 
-  // eslint-disable-next-line complexity
   const abiEvent = useMemo((): AbiEvent | null => {
     // for contracts, we decode the actual event
-    // eslint-disable-next-line no-magic-numbers
     if (value.section === 'contracts' && value.method === 'ContractExecution' && value.data.length === 2) {
       // see if we have info for this contract
       const [accountId, encoded] = value.data;
@@ -51,8 +48,7 @@ function EventDisplay({ children, className = '', value }: Props): React.ReactEl
 
           return {
             ...decoded,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            values: decoded.args.map((value: any) => ({ isValid: true, value })),
+            values: decoded.args.map((value) => ({ isValid: true, value })),
           };
         }
       } catch (error) {

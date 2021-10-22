@@ -3,8 +3,9 @@
 
 import React from 'react';
 
+import { AddressRow, Button, Modal } from '@polkadot/react-components';
+
 import { useTranslation } from './translate';
-import { AddressRow, Button, Modal } from '.';
 
 type Mode = 'account' | 'address' | 'contract' | 'code';
 
@@ -54,7 +55,7 @@ function getContent(mode: Mode, t: <T = string>(key: string) => T): React.ReactN
         <>
           <p>
             {t<string>(
-              `You are about to remove this contract from your list of available contracts. Once completed, should you need to access it again, you will have to manually add the contract's address in the Instantiate tab.`
+              'You are about to remove this contract from your list of available contracts. Once completed, should you need to access it again, you will have to manually add the contract\'s address in the Instantiate tab.'
             )}
           </p>
           <p>
@@ -106,7 +107,7 @@ function Forget(props: Props): React.ReactElement<Props> {
   return (
     <Modal className="app--accounts-Modal" header={getHeaderText(mode, t)} onClose={onClose}>
       <Modal.Content>{children || renderContent(props, t)}</Modal.Content>
-      <Modal.Actions onCancel={onClose}>
+      <Modal.Actions>
         <Button icon="trash" label={t<string>('Forget')} onClick={onForget} />
       </Modal.Actions>
     </Modal>

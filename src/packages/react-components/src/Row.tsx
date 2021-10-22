@@ -1,8 +1,7 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { useToggle } from '@polkadot/react-hooks';
@@ -191,11 +190,10 @@ function Row({
   const [isEditingName, toggleIsEditingName] = useToggle();
   const [isEditingTags, toggleIsEditingTags] = useToggle();
 
-  const _onSaveName = (): void => {
-    // eslint-disable-next-line
+  const _onSaveName = useCallback((): void => {
     onSaveName && onSaveName();
     toggleIsEditingName();
-  };
+  }, [onSaveName, toggleIsEditingName]);
 
   return (
     <div className={`ui--Row${isDisabled ? ' isDisabled' : ''}${isInline ? ' isInline' : ''} ${className}`}>

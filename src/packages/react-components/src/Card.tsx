@@ -12,7 +12,6 @@ interface Props {
   withBottomMargin?: boolean;
 }
 
-// eslint-disable-next-line complexity
 function Card({ children, className = '', isError, isSuccess, withBottomMargin }: Props): React.ReactElement<Props> {
   return (
     <article

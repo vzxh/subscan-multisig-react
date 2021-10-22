@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsicFunction } from '@polkadot/api/types';
-import React from 'react';
-import Dropdown from '../Dropdown';
 import type { DropdownOptions } from '../util/types';
+
+import React from 'react';
+
+import Dropdown from '../Dropdown';
 
 interface Props {
   className?: string;

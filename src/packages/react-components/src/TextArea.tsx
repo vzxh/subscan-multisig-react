@@ -31,7 +31,6 @@ function TextArea({
 }: Props): React.ReactElement<Props> {
   const _onChange = useCallback(
     ({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>): void => {
-      // eslint-disable-next-line
       onChange && onChange(value);
     },
     [onChange]

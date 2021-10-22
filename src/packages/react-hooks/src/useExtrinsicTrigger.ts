@@ -19,7 +19,6 @@ export function useExtrinsicTrigger(checks: ExtrinsicCheck[]): string {
   const block = useCall<SignedBlockExtended>(api.derive.chain.subscribeNewBlocks);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     mountedRef.current &&
       block &&
       block.extrinsics &&

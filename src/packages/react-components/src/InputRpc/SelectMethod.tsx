@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { DefinitionRpcExt } from '@polkadot/types/types';
-import React, { useCallback } from 'react';
-import Dropdown from '../Dropdown';
 import type { DropdownOption } from '../util/types';
+
+import React, { useCallback } from 'react';
+
+import Dropdown from '../Dropdown';
 import useRpcs from './useRpcs';
 
 interface Props {

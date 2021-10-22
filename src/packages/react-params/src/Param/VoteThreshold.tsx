@@ -1,12 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { Props } from '../types';
+
 import React, { useCallback } from 'react';
 
-import { ClassOf } from '@polkadot/types/create';
+import { Dropdown } from '@polkadot/react-components';
 import { bnToBn } from '@polkadot/util';
-import { Dropdown } from '../../../react-components/src';
-import type { Props } from '../types';
 
 import Bare from './Bare';
 
@@ -18,10 +18,10 @@ const options = [
   { text: 'Simple majority', value: 2 },
 ];
 
-export const textMap = options.reduce((acc, { text, value }): TextMap => {
-  acc[value] = text;
+export const textMap = options.reduce((textMap, { text, value }): TextMap => {
+  textMap[value] = text;
 
-  return acc;
+  return textMap;
 }, {} as unknown as TextMap);
 
 function VoteThresholdParam({
@@ -35,17 +35,17 @@ function VoteThresholdParam({
   withLabel,
 }: Props): React.ReactElement<Props> {
   const _onChange = useCallback(
-    (val: number) =>
+    (value: number) =>
       onChange &&
       onChange({
         isValid: true,
-        value: val,
+        value,
       }),
     [onChange]
   );
 
   const defaultValue =
-    value instanceof ClassOf(registry, 'VoteThreshold') ? value.toNumber() : bnToBn(value as number).toNumber();
+    value instanceof registry.createClass('VoteThreshold') ? value.toNumber() : bnToBn(value as number).toNumber();
 
   return (
     <Bare className={className}>

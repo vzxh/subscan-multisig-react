@@ -1,10 +1,12 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconName } from '@fortawesome/fontawesome-svg-core';
+import type { QueueStatus, QueueTx, QueueTxStatus } from './types';
+
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+
 import AddressMini from '../AddressMini';
 import Button from '../Button';
 import Icon from '../Icon';
@@ -12,7 +14,6 @@ import Spinner from '../Spinner';
 import { useTranslation } from '../translate';
 import { STATUS_COMPLETE } from './constants';
 import StatusContext from './Context';
-import type { QueueStatus, QueueTx, QueueTxStatus } from './types';
 
 export { StatusContext };
 
@@ -76,7 +77,7 @@ function renderStatus({ account, action, id, message, removeItem, status }: Queu
           </div>
           <div className="desc">
             <div className="header">
-              {Array.isArray(action) ? action.map((act, index) => <div key={index}>{act}</div>) : action}
+              {Array.isArray(action) ? action.map((action, index) => <div key={index}>{action}</div>) : action}
             </div>
             {account && <AddressMini value={account} />}
             <div className="status">{message}</div>
@@ -145,7 +146,7 @@ function Status({ className = '' }: Props): React.ReactElement<Props> | null {
 
   const _onDismiss = useCallback((): void => {
     allSt.map((s) => s.removeItem());
-    completedTx.map((tx) => tx.removeItem());
+    completedTx.map((t) => t.removeItem());
   }, [allSt, completedTx]);
 
   if (!allSt.length && !allTx.length) {

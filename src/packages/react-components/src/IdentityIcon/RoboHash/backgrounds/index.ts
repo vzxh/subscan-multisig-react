@@ -24,8 +24,7 @@ import b017 from './bg2/004-robotBG-01.png';
 import b018 from './bg2/005-robotBG-02.png';
 import b019 from './bg2/006-robotBG-07.png';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const backgrounds: any[] = [
+const backgrounds: unknown[] = [
   b000,
   b001,
   b002,

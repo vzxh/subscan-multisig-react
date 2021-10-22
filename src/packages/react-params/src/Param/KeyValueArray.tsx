@@ -3,10 +3,13 @@
 
 import type { Vec } from '@polkadot/types';
 import type { KeyValue as Pair } from '@polkadot/types/interfaces';
-import { assert, isHex, u8aToHex, u8aToString } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
-import { useTranslation } from '../translate';
 import type { Props, RawParam } from '../types';
+
+import React, { useCallback, useState } from 'react';
+
+import { assert, isHex, u8aToHex, u8aToString } from '@polkadot/util';
+
+import { useTranslation } from '../translate';
 import Base from './Base';
 import Bytes from './Bytes';
 import File from './File';
@@ -29,12 +32,12 @@ function parseFile(raw: Uint8Array): Parsed {
   const keys = Object.keys(json);
   let isValid = keys.length !== 0;
   const value = keys.map((key): [Uint8Array, Uint8Array] => {
-    const val = json[key];
+    const value = json[key];
 
-    assert(isHex(key) && isHex(val), `Non-hex key/value pair found in ${key.toString()} => ${val.toString()}`);
+    assert(isHex(key) && isHex(value), `Non-hex key/value pair found in ${key.toString()} => ${value.toString()}`);
 
     const encKey = createParam(key);
-    const encValue = createParam(val);
+    const encValue = createParam(value);
 
     isValid = isValid && encKey.isValid && encValue.isValid;
 
@@ -81,7 +84,6 @@ function KeyValueArray({
         setPlaceholder(t(EMPTY_PLACEHOLDER));
       }
 
-      // eslint-disable-next-line
       onChange && onChange(encoded);
     },
     [onChange, t]

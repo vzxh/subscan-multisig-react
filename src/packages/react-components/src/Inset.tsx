@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/app-democracy authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,7 +36,6 @@ function Inset({
   const [isCollapsed, toggleCollapsed] = useToggle();
 
   const _onClick = useCallback((): void => {
-    // eslint-disable-next-line
     href && history.push(href);
   }, [history, href]);
 

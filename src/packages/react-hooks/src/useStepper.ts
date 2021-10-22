@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

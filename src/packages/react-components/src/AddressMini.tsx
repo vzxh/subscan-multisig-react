@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/app-staking authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,6 +27,7 @@ interface Props {
   label?: React.ReactNode;
   labelBalance?: React.ReactNode;
   nameExtra?: React.ReactNode;
+  onNameClick?: () => void;
   summary?: React.ReactNode;
   type?: KeyringItemType;
   value?: AccountId | AccountIndex | Address | string | null | Uint8Array;
@@ -51,6 +51,7 @@ function AddressMini({
   label,
   labelBalance,
   nameExtra,
+  onNameClick,
   summary,
   value,
   withAddress = true,
@@ -73,12 +74,12 @@ function AddressMini({
     >
       {label && <label className="ui--AddressMini-label">{label}</label>}
       <div className="ui--AddressMini-icon">
-        <IdentityIcon value={value as Uint8Array} />
+        <IdentityIcon value={value} />
         {iconInfo && <div className="ui--AddressMini-icon-info">{iconInfo}</div>}
       </div>
       <div className="ui--AddressMini-info">
         {withAddress && (
-          <div className="ui--AddressMini-address">
+          <div className="ui--AddressMini-address" onClick={onNameClick}>
             {withName ? (
               <AccountName value={value} withSidebar={withSidebar}>
                 {nameExtra}

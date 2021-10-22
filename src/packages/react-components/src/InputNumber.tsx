@@ -1,18 +1,16 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ApiPromise } from '@polkadot/api';
 import type { SiDef } from '@polkadot/util/types';
+import type { BitLength } from './types';
 
 import BN from 'bn.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import { BN_ONE, BN_TEN, BN_TWO, BN_ZERO, formatBalance, isBn, isUndefined } from '@polkadot/util';
 import { useApi } from '@polkadot/react-hooks';
-import type { BitLength } from './types';
+import { BN_ONE, BN_TEN, BN_TWO, BN_ZERO, formatBalance, isBn, isUndefined } from '@polkadot/util';
 
 import { BitLengthOption } from './constants';
 import Dropdown from './Dropdown';
@@ -92,7 +90,7 @@ function isValidNumber(bn: BN, bitLength: BitLength, isZeroable: boolean, maxVal
     // cannot be negative
     bn.lt(BN_ZERO) ||
     // cannot be > than allowed max
-    !bn.lt(getGlobalMaxValue(bitLength)) ||
+    bn.gt(getGlobalMaxValue(bitLength)) ||
     // check if 0 and it should be a value
     (!isZeroable && bn.isZero()) ||
     // check that the bitlengths fit
@@ -123,7 +121,6 @@ function inputToBn(
   let result;
 
   if (isDecimalValue) {
-    // eslint-disable-next-line no-magic-numbers
     if (siUnitPower - isDecimalValue[2].length < -basePower) {
       result = new BN(-1);
     }
@@ -218,7 +215,6 @@ function InputNumber({
   const siOptions = useMemo(() => getSiOptions(siSymbol || TokenUnit.abbr, siDecimals), [siDecimals, siSymbol]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     onChange && onChange(isValid ? valueBn : undefined);
   }, [isValid, onChange, valueBn]);
 
@@ -231,7 +227,6 @@ function InputNumber({
   const _onChange = useCallback((input: string) => _onChangeWithSi(input, si), [_onChangeWithSi, si]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     defaultValue && _onChange(defaultValue.toString());
   }, [_onChange, defaultValue]);
 
@@ -312,10 +307,10 @@ function InputNumber({
     >
       {!!si && (
         <Dropdown
-          defaultValue={si.value}
+          defaultValue={isDisabled && siDefault ? siDefault.value : si.value}
           dropdownClassName="ui--SiDropdown"
           isButton
-          onChange={_onSelectSiUnit}
+          onChange={isDisabled ? undefined : _onSelectSiUnit}
           options={siOptions}
         />
       )}
@@ -328,7 +323,7 @@ export default React.memo(styled(InputNumber)`
   &.isDisabled {
     .ui--SiDropdown {
       background: transparent;
-      border-color: rgba(34, 36, 38, 0.15) !important;
+      border-color: var(--border-input) !important;
       border-style: dashed;
       color: #666 !important;
       cursor: default !important;

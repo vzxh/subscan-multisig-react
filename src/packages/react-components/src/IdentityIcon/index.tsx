@@ -8,10 +8,10 @@ import React, { useCallback, useContext } from 'react';
 import styled from 'styled-components';
 
 import { getSystemIcon } from '@polkadot/apps-config';
+import { ThemeProps } from '@polkadot/react-components/types';
+import { useApi } from '@polkadot/react-hooks';
 import BaseIdentityIcon from '@polkadot/react-identicon';
 import { settings } from '@polkadot/ui-settings';
-import { useApi } from '@polkadot/react-hooks';
-import { ThemeProps } from '../types';
 
 import StatusContext from '../Status/Context';
 import { useTranslation } from '../translate';
@@ -35,7 +35,6 @@ function isCodec(
   return !!(value && (value as AccountId).toHuman);
 }
 
-// eslint-disable-next-line no-magic-numbers
 function IdentityIcon({ className = '', prefix, size = 24, theme, value }: Props): React.ReactElement<Props> {
   const { isEthereum, specName, systemName } = useApi();
   const { t } = useTranslation();

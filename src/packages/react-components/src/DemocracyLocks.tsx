@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,9 +9,9 @@ import type { Balance } from '@polkadot/types/interfaces';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+import { useBestNumber } from '@polkadot/react-hooks';
 import { BlockToTime, FormatBalance } from '@polkadot/react-query';
 import { BN_ZERO, bnMax, formatBalance, formatNumber } from '@polkadot/util';
-import { useBestNumber } from '@polkadot/react-hooks';
 
 import Icon from './Icon';
 import Tooltip from './Tooltip';
@@ -104,7 +103,6 @@ function DemocracyLocks({ className = '', value }: Props): React.ReactElement<Pr
   const [{ maxBalance, sorted }, setState] = useState<State>({ maxBalance: BN_ZERO, sorted: [] });
 
   useEffect((): void => {
-    // eslint-disable-next-line
     bestNumber &&
       setState((state): State => {
         const newState = groupLocks(t, bestNumber, value);
@@ -125,14 +123,13 @@ function DemocracyLocks({ className = '', value }: Props): React.ReactElement<Pr
 
   return (
     <div className={className}>
-      <Icon icon="clock" tooltip={trigger} />
-      <FormatBalance value={maxBalance} />
+      <FormatBalance labelPost={<Icon icon="clock" tooltip={trigger} />} value={maxBalance} />
       <Tooltip
         text={sorted.map(
           ({ details, headers }, index): React.ReactNode => (
             <div className="row" key={index}>
-              {headers.map((header, idx) => (
-                <div key={idx}>{header}</div>
+              {headers.map((header, index) => (
+                <div key={index}>{header}</div>
               ))}
               <div className="faded">{details}</div>
             </div>
@@ -146,11 +143,6 @@ function DemocracyLocks({ className = '', value }: Props): React.ReactElement<Pr
 
 export default React.memo(styled(DemocracyLocks)`
   white-space: nowrap;
-
-  .ui--Icon {
-    margin-left: 0;
-    margin-right: 0.25rem;
-  }
 
   .ui--FormatBalance {
     display: inline-block;

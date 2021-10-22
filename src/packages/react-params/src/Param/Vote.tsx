@@ -1,20 +1,19 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { Props } from '../types';
+
 import React, { useRef } from 'react';
 
+import { Dropdown } from '@polkadot/react-components';
 import { GenericVote } from '@polkadot/types';
 import { isBn } from '@polkadot/util';
-import { Dropdown } from '../../../react-components/src';
-import type { Props } from '../types';
 
 import { useTranslation } from '../translate';
 import Bare from './Bare';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function doChange(onChange?: (value: any) => void): (_: number) => void {
   return function (value: number): void {
-    // eslint-disable-next-line
     onChange &&
       onChange({
         isValid: true,
@@ -23,7 +22,6 @@ function doChange(onChange?: (value: any) => void): (_: number) => void {
   };
 }
 
-// eslint-disable-next-line complexity
 function Vote({
   className = '',
   defaultValue: { value },

@@ -1,13 +1,15 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type BN from 'bn.js';
 import type { ApiPromise } from '@polkadot/api';
+import type { Inflation } from './types';
+
+import { useEffect, useState } from 'react';
+
 import { getInflationParams } from '@polkadot/apps-config';
 import { BN_MILLION, BN_ZERO } from '@polkadot/util';
-import type BN from 'bn.js';
-import { useEffect, useState } from 'react';
-import type { Inflation } from './types';
+
 import { useApi } from './useApi';
 import { useCall } from './useCall';
 
@@ -46,7 +48,6 @@ export function useInflation(totalStaked?: BN): Inflation {
   useEffect((): void => {
     const numAuctions = api.query.auctions ? auctionCounter : BN_ZERO;
 
-    // eslint-disable-next-line
     numAuctions &&
       totalIssuance &&
       totalStaked &&

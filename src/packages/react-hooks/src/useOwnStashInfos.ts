@@ -1,14 +1,16 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import type { CombinatorFunction } from '@polkadot/api/promise/Combinator';
 import type { DeriveStakingAccount } from '@polkadot/api-derive/types';
 import type { AccountId, ValidatorPrefs } from '@polkadot/types/interfaces';
 import type { Codec, ITuple } from '@polkadot/types/types';
-import { u8aConcat, u8aToHex } from '@polkadot/util';
-import { useEffect, useMemo, useState } from 'react';
 import type { StakerState } from './types';
+
+import { useEffect, useMemo, useState } from 'react';
+
+import { u8aConcat, u8aToHex } from '@polkadot/util';
+
 import { useAccounts } from './useAccounts';
 import { useApi } from './useApi';
 import { useIsMountedRef } from './useIsMountedRef';
@@ -29,10 +31,10 @@ function getStakerState(
     {
       controllerId: _controllerId,
       exposure,
-      nextSessionIds,
+      nextSessionIds: _nextSessionIds,
       nominators,
       rewardDestination,
-      sessionIds,
+      sessionIds: _sessionIds,
       stakingLedger,
       validatorPrefs,
     },
@@ -41,8 +43,10 @@ function getStakerState(
 ): StakerState {
   const isStashNominating = !!nominators?.length;
   const isStashValidating = !(Array.isArray(validateInfo) ? validateInfo[1].isEmpty : validateInfo.isEmpty);
-  const nextConcat = u8aConcat(...nextSessionIds.map((id): Uint8Array => id.toU8a()));
-  const currConcat = u8aConcat(...sessionIds.map((id): Uint8Array => id.toU8a()));
+  const nextSessionIds = _nextSessionIds instanceof Map ? [..._nextSessionIds.values()] : _nextSessionIds;
+  const nextConcat = u8aConcat(...nextSessionIds.map((id) => id.toU8a()));
+  const sessionIds = _sessionIds instanceof Map ? [..._sessionIds.values()] : _sessionIds;
+  const currConcat = u8aConcat(...sessionIds.map((id) => id.toU8a()));
   const controllerId = toIdString(_controllerId);
 
   return {
@@ -78,20 +82,18 @@ export function useOwnStashInfos(): StakerState[] | undefined {
     if (ownStashes) {
       if (ownStashes.length) {
         const stashIds = ownStashes.map(([stashId]) => stashId);
-        const fns: any[] = [
+        const fns = [
           [api.derive.staking.accounts, stashIds],
           [api.query.staking.validators.multi, stashIds],
-        ];
+        ] as unknown as CombinatorFunction[];
 
         api
           .combineLatest<[DeriveStakingAccount[], ValidatorInfo[]]>(fns, ([accounts, validators]): void => {
-            // eslint-disable-next-line
             mountedRef.current &&
               ownStashes.length === accounts.length &&
               ownStashes.length === validators.length &&
               setQueried(
                 ownStashes.reduce(
-                  // eslint-disable-next-line
                   (queried: Queried, [stashId, isOwnStash], index): Queried => ({
                     ...queried,
                     [stashId]: [isOwnStash, accounts[index], validators[index]],
@@ -100,18 +102,16 @@ export function useOwnStashInfos(): StakerState[] | undefined {
                 )
               );
           })
-          .then((_unsub): void => {
-            unsub = _unsub;
+          .then((u): void => {
+            unsub = u;
           })
           .catch(console.error);
       } else {
-        // eslint-disable-next-line
         mountedRef.current && setQueried({});
       }
     }
 
     return (): void => {
-      // eslint-disable-next-line
       unsub && unsub();
     };
   }, [api, mountedRef, ownStashes]);

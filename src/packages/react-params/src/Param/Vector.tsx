@@ -1,15 +1,16 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { isUndefined } from '@polkadot/util';
 import type { ParamDef, Props, RawParam } from '../types';
 
-import { Button } from '../../../react-components/src';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import { Button } from '@polkadot/react-components';
+import { isUndefined } from '@polkadot/util';
 
 import getInitValue from '../initValue';
 import { useTranslation } from '../translate';
-import { Params } from '..';
+import Params from '../';
 import Base from './Base';
 import useParamDefs from './useParamDefs';
 
@@ -41,39 +42,37 @@ function Vector({
   useEffect((): void => {
     if (inputParams.length) {
       const max = isDisabled ? ((defaultValue.value as RawParam[]) || []).length : count;
-      const parameters: ParamDef[] = [];
+      const params: ParamDef[] = [];
 
       for (let index = 0; index < max; index++) {
-        parameters.push(generateParam(inputParams, index));
+        params.push(generateParam(inputParams, index));
       }
 
-      setParams(parameters);
+      setParams(params);
     }
   }, [count, defaultValue, isDisabled, inputParams]);
 
   // when !isDisable, generating an input list based on count
   useEffect((): void => {
-    // eslint-disable-next-line
     !isDisabled &&
       inputParams.length &&
-      setValues((source): RawParam[] => {
-        if (source.length === count) {
-          return source;
+      setValues((values): RawParam[] => {
+        if (values.length === count) {
+          return values;
         }
 
-        while (source.length < count) {
+        while (values.length < count) {
           const value = getInitValue(registry, inputParams[0].type);
 
-          source.push({ isValid: !isUndefined(value), value });
+          values.push({ isValid: !isUndefined(value), value });
         }
 
-        return source.slice(0, count);
+        return values.slice(0, count);
       });
   }, [count, inputParams, isDisabled, registry]);
 
   // when isDisabled, set the values based on the defaultValue input
   useEffect((): void => {
-    // eslint-disable-next-line
     isDisabled &&
       setValues(
         ((defaultValue.value as RawParam[]) || []).map((value: RawParam) =>
@@ -84,7 +83,6 @@ function Vector({
 
   // when our values has changed, alert upstream
   useEffect((): void => {
-    // eslint-disable-next-line
     onChange &&
       onChange({
         isValid: values.reduce((result: boolean, { isValid }) => result && isValid, true),
@@ -92,8 +90,8 @@ function Vector({
       });
   }, [values, onChange]);
 
-  const _rowAdd = useCallback((): void => setCount((amount) => amount + 1), []);
-  const _rowRemove = useCallback((): void => setCount((amount) => amount - 1), []);
+  const _rowAdd = useCallback((): void => setCount((count) => count + 1), []);
+  const _rowRemove = useCallback((): void => setCount((count) => count - 1), []);
 
   return (
     <Base className={className} isOuter label={label} withLabel={withLabel}>

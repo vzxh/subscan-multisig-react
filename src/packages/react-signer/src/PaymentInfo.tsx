@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,9 +9,9 @@ import type { RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
+import { Expander, MarkWarning } from '@polkadot/react-components';
+import { useApi, useCall, useIsMountedRef } from '@polkadot/react-hooks';
 import { formatBalance, isFunction } from '@polkadot/util';
-import { Expander, MarkWarning } from '../../react-components/src';
-import { useApi, useCall, useIsMountedRef } from '../../react-hooks/src';
 
 import { useTranslation } from './translate';
 

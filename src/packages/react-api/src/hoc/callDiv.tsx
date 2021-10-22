@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-api authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
 import type { BaseProps } from '../types';
-import withCall from './call';
 import type { DefaultProps, Options } from './types';
+
+import React from 'react';
+
+import withCall from './call';
 
 interface Props<T> extends BaseProps<T> {
   callResult?: T;
@@ -25,7 +26,7 @@ export default function withCallDiv<T>(endpoint: string, options: Options = {}) 
       return (
         <div {...defaultProps} className={[className || '', callUpdated ? 'rx--updated' : undefined].join(' ')}>
           {label}
-          {render(callResult)}
+          {render(callResult as T)}
           {children}
         </div>
       );

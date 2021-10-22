@@ -1,25 +1,26 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { createWsEndpoints } from '@polkadot/apps-config';
-import type { LinkOption } from '@polkadot/apps-config/endpoints/types';
-import { bnToBn } from '@polkadot/util';
 import type BN from 'bn.js';
+import type { LinkOption } from '@polkadot/apps-config/endpoints/types';
+
 import { useMemo } from 'react';
+
+import { createWsEndpoints } from '@polkadot/apps-config';
+import { bnToBn } from '@polkadot/util';
+
 import { useApi } from './useApi';
 
 const endpoints = createWsEndpoints((key: string, value: string | undefined) => value || key);
 
 function extractRelayEndpoints(genesisHash: string): LinkOption[] {
-  return endpoints.filter(({ genesisHashRelay }: any) => genesisHash === genesisHashRelay);
+  return endpoints.filter(({ genesisHashRelay }) => genesisHash === genesisHashRelay);
 }
 
 function extractParaEndpoints(allEndpoints: LinkOption[], paraId: BN | number): LinkOption[] {
   const numId = bnToBn(paraId).toNumber();
 
-  return allEndpoints.filter(({ paraId }: any) => paraId === numId);
+  return allEndpoints.filter(({ paraId }) => paraId === numId);
 }
 
 export function useRelayEndpoints(): LinkOption[] {

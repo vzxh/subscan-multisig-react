@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +17,6 @@ export function useMapKeys<T = any>(
   const [state, setState] = useState<T[] | undefined>();
 
   useEffect((): void => {
-    // eslint-disable-next-line
     entry &&
       (at && at !== '0' ? entry.keysAt(at) : entry.keys())
         .then((keys) => setState(transform ? transform(keys) : (keys as unknown as T[])))

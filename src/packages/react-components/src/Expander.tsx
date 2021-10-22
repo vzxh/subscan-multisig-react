@@ -1,6 +1,3 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,14 +7,14 @@ import type { Text } from '@polkadot/types';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
+import { LabelHelp } from '@polkadot/react-components';
 import { useToggle } from '@polkadot/react-hooks';
 
 import Icon from './Icon';
 import { useTranslation } from './translate';
-import { LabelHelp } from '.';
 
 interface Meta {
-  documentation: Text[];
+  docs: Text[];
 }
 
 export interface Props {
@@ -33,6 +30,7 @@ export interface Props {
   summaryHead?: React.ReactNode;
   summaryMeta?: Meta;
   summarySub?: React.ReactNode;
+  withBreaks?: boolean;
   withHidden?: boolean;
 }
 
@@ -47,12 +45,12 @@ function splitParts(value: string): string[] {
 }
 
 function formatMeta(meta?: Meta): React.ReactNode | null {
-  if (!meta || !meta.documentation.length) {
+  if (!meta || !meta.docs.length) {
     return null;
   }
 
-  const strings = meta.documentation.map((doc) => doc.toString().trim());
-  const firstEmpty = strings.findIndex((doc) => !doc.length);
+  const strings = meta.docs.map((d) => d.toString().trim());
+  const firstEmpty = strings.findIndex((d) => !d.length);
   const combined = (firstEmpty === -1 ? strings : strings.slice(0, firstEmpty))
     .join(' ')
     .replace(/#(<weight>| <weight>).*<\/weight>/, '');
@@ -78,6 +76,7 @@ function Expander({
   summaryHead,
   summaryMeta,
   summarySub,
+  withBreaks,
   withHidden,
 }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
@@ -101,7 +100,7 @@ function Expander({
     <div
       className={`ui--Expander${isExpanded ? ' isExpanded' : ''}${isPadded ? ' isPadded' : ''}${
         hasContent ? ' hasContent' : ''
-      } ${className}`}
+      }${withBreaks ? ' withBreaks' : ''} ${className}`}
     >
       <div className="ui--Expander-summary" onClick={toggleExpanded}>
         <div className="ui--Expander-summary-header">
@@ -144,6 +143,10 @@ export default React.memo(styled(Expander)`
     .ui--Expander-summary {
       margin-left: 2.25rem;
     }
+  }
+
+  &.withBreaks .ui--Expander-content {
+    white-space: normal;
   }
 
   .ui--Expander-summary {

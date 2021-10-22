@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2020 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -62,7 +61,6 @@ export function useTxBatch(
   const [batchSize, setBatchSize] = useState(Math.floor(options?.batchSize || 64));
 
   useEffect((): void => {
-    // eslint-disable-next-line
     txs &&
       txs.length &&
       allAccounts[0] &&

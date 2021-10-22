@@ -36,7 +36,6 @@ function BlockToTime({
     <div className={`${className}${isInline ? ' isInline' : ''}`}>
       {label || ''}
       {text.split(' ').map((v, index) => (
-        // eslint-disable-next-line no-magic-numbers
         <span className={index % 2 ? 'timeUnits' : undefined} key={index}>
           {v}
         </span>

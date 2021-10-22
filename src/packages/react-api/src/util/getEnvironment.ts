@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/app-accounts authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -6,11 +5,11 @@ import type { Environment } from '../types';
 
 // https://github.com/electron/electron/issues/2288
 function isElectron() {
-  if ((process?.versions as any)?.electron) {
+  if (process?.versions?.electron) {
     return true;
   }
 
-  if ((window?.process as any)?.type === 'renderer') {
+  if (window?.process?.type === 'renderer') {
     return true;
   }
 

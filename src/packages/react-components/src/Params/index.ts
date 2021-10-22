@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ComponentMap } from '@polkadot/react-params/types';
+
 import Call from './Call';
 import OpaqueCall from './OpaqueCall';
 import Proposal from './Proposal';

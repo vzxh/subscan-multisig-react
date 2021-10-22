@@ -30,7 +30,6 @@ function Head({ className = '', filter, header, isEmpty }: Props): React.ReactEl
       <tr>
         {header
           .filter((h): h is HeaderDef => !!h)
-          // eslint-disable-next-line @typescript-eslint/no-shadow
           .map(([label, className = 'default', colSpan = 1, onClick], index) => (
             <th className={className} colSpan={colSpan} key={index} onClick={onClick}>
               {index === 0 ? (
@@ -118,6 +117,11 @@ export default React.memo(styled(Head)`
 
     &.start {
       text-align: left;
+    }
+
+    &.balances {
+      text-align: right;
+      padding-right: 2.25rem;
     }
   }
 

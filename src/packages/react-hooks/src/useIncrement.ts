@@ -10,7 +10,6 @@ export function useIncrement(defaultValue = 1): [number, () => void, (value: num
   const [value, setValue] = useState(defaultValue);
 
   const increment = useCallback((): void => {
-    // eslint-disable-next-line
     mountedRef.current && setValue((value: number) => ++value);
   }, [mountedRef]);
 

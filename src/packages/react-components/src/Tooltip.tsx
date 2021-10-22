@@ -14,6 +14,7 @@ function rootElement() {
 
 interface Props {
   className?: string;
+  clickable?: boolean;
   dataFor?: string;
   effect?: 'solid' | 'float';
   offset?: {
@@ -29,6 +30,7 @@ interface Props {
 
 function Tooltip({
   className = '',
+  clickable = false,
   effect = 'solid',
   offset,
   place = 'top',
@@ -44,17 +46,22 @@ function Tooltip({
   useEffect((): (() => void) => {
     const root = rootElement();
 
-    // eslint-disable-next-line
     root && root.appendChild(tooltipContainer);
 
     return (): void => {
-      // eslint-disable-next-line
       root && root.removeChild(tooltipContainer);
     };
   }, [tooltipContainer]);
 
   return ReactDOM.createPortal(
-    <ReactTooltip className={`ui--Tooltip ${className}`} effect={effect} id={trigger} offset={offset} place={place}>
+    <ReactTooltip
+      className={`ui--Tooltip ${className}`}
+      clickable={clickable}
+      effect={effect}
+      id={trigger}
+      offset={offset}
+      place={place}
+    >
       {className?.includes('address') ? <div>{text}</div> : text}
     </ReactTooltip>,
     tooltipContainer

@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,8 +6,8 @@ import type { AccountId, AccountIndex, Address } from '@polkadot/types/interface
 import React from 'react';
 import styled from 'styled-components';
 
-import BaseIdentityIcon from '@polkadot/react-identicon';
 import { useAccountInfo } from '@polkadot/react-hooks';
+import BaseIdentityIcon from '@polkadot/react-identicon';
 
 import IdentityIcon from './IdentityIcon';
 import Row, { RowProps } from './Row';
@@ -26,7 +25,6 @@ export interface Props extends RowProps {
   withTags?: boolean;
 }
 
-// eslint-disable-next-line no-magic-numbers
 const DEFAULT_ADDR = '5'.padEnd(48, 'x');
 const ICON_SIZE = 32;
 

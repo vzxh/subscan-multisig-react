@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { DeriveAccountFlags, DeriveAccountRegistration } from '@polkadot/api-derive/types';
+import type { DisplayedJudgement } from '@polkadot/react-components/types';
 import type {
   AccountId,
   Balance,
@@ -31,11 +31,13 @@ export interface CallOptions<T> {
   withParamsTransform?: boolean;
 }
 
-export type TxDef = [string, any[] | ((...params: any[]) => SubmittableExtrinsic<'promise'>)];
+export type TxDef = [string, unknown[] | ((...params: unknown[]) => SubmittableExtrinsic<'promise'>)];
 
 export type TxDefs = SubmittableExtrinsic<'promise'> | IExtrinsic | Call | TxDef | null;
 
 export type TxSource<T extends TxDefs> = [T, boolean];
+
+export type CollectiveType = 'council' | 'membership' | 'technicalCommittee';
 
 export interface ModalState {
   isOpen: boolean;
@@ -109,13 +111,8 @@ export interface AddressFlags extends DeriveAccountFlags {
 }
 
 export interface AddressIdentity extends DeriveAccountRegistration {
-  isGood: boolean;
-  isBad: boolean;
-  isKnownGood: boolean;
-  isReasonable: boolean;
-  isErroneous: boolean;
-  isLowQuality: boolean;
   isExistent: boolean;
+  isKnownGood: boolean;
   waitCount: number;
 }
 
@@ -132,12 +129,15 @@ export interface UseAccountInfo {
   meta?: KeyringJson$Meta;
   toggleIsEditingName: () => void;
   isEditingTags: boolean;
+  isEditing: () => boolean;
   isNull: boolean;
   toggleIsEditingTags: () => void;
   onSaveName: () => void;
   onSaveTags: () => void;
   onSetGenesisHash: (genesisHash: string | null) => void;
   onForgetAddress: () => void;
+  setIsEditingName: (isEditing: boolean) => void;
+  setIsEditingTags: (isEditing: boolean) => void;
 }
 
 export interface StakerState {
@@ -157,3 +157,15 @@ export interface StakerState {
   stashId: string;
   validatorPrefs?: ValidatorPrefs;
 }
+
+export interface Registrar {
+  address: string;
+  index: number;
+}
+
+export interface Judgement {
+  judgementName: DisplayedJudgement;
+  registrars: (Registrar | undefined)[];
+}
+
+export type UseJudgements = Judgement[];

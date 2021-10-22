@@ -1,17 +1,16 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/apps authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { chainLogos, emptyLogos, namedLogos, nodeLogos, specLogos } from '@polkadot/apps-config';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+
+import { chainLogos, emptyLogos, namedLogos, nodeLogos, specLogos } from '@polkadot/apps-config';
 import { useApi } from '@polkadot/react-hooks';
 
 interface Props {
   className?: string;
   isInline?: boolean;
   logo?: keyof typeof namedLogos;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onClick?: () => any;
   withoutHl?: boolean;
 }

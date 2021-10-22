@@ -4,6 +4,7 @@
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import React from 'react';
 import styled from 'styled-components';
+
 import Icon from '../Icon';
 
 interface Props {

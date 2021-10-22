@@ -1,19 +1,18 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { isBn } from '@polkadot/util';
 import type BN from 'bn.js';
-import { ChartData, ChartOptions } from 'chart.js';
-import * as helpers from 'chart.js/helpers';
-import React, { useMemo } from 'react';
-import * as Chart from 'react-chartjs-2';
 import type { LineProps } from './types';
 
+import ChartJs from 'chart.js';
+import React, { useMemo } from 'react';
+import * as Chart from 'react-chartjs-2';
+
+import { isBn } from '@polkadot/util';
+
 interface State {
-  chartData: ChartData;
-  chartOptions: ChartOptions;
+  chartData: ChartJs.ChartData;
+  chartOptions: ChartJs.ChartOptions;
 }
 
 interface Dataset {
@@ -32,7 +31,9 @@ interface Config {
 
 const COLORS = ['#ff8c00', '#008c8c', '#8c008c'];
 
-const alphaColor = (hexColor: string): string => helpers.color(hexColor).alpha(0.65).rgbString();
+const alphaColor = (hexColor: string): string =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+  ChartJs.helpers.color(hexColor).alpha(0.65).rgbString();
 
 const chartOptions = {
   // no need for the legend, expect the labels contain everything
@@ -77,8 +78,6 @@ function calculateOptions(
 
   return {
     chartData,
-    // eslint-disable-next-line
-    // @ts-ignore
     chartOptions,
   };
 }
@@ -91,8 +90,6 @@ function LineChart({ className, colors, labels, legends, values }: LineProps): R
 
   return (
     <div className={className}>
-      {/* eslint-disable-next-line */}
-      {/* @ts-ignore */}
       <Chart.Line data={chartData} options={chartOptions} />
     </div>
   );

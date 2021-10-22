@@ -1,36 +1,36 @@
-/* eslint-disable no-console */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-api authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { deriveMapCache, setDeriveCache } from '@polkadot/api-derive/util';
-import { ApiPromise } from '@polkadot/api/promise';
-import { ethereumChains } from '@polkadot/apps-config';
-import { web3Accounts } from '@polkadot/extension-dapp';
+import type BN from 'bn.js';
 import type { InjectedExtension } from '@polkadot/extension-inject/types';
 import type { ChainProperties, ChainType } from '@polkadot/types/interfaces';
-import { keyring } from '@polkadot/ui-keyring';
 import type { KeyringStore } from '@polkadot/ui-keyring/types';
+import type { ApiProps, ApiState } from './types';
+
+import { Detector } from '@substrate/connect';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import store from 'store';
+
+import { WsProvider } from '@polkadot/api';
+import { ApiPromise } from '@polkadot/api/promise';
+import { deriveMapCache, setDeriveCache } from '@polkadot/api-derive/util';
+import { ethereumChains, typesBundle, typesChain } from '@polkadot/apps-config';
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+import { TokenUnit } from '@polkadot/react-components/InputNumber';
+import { StatusContext } from '@polkadot/react-components/Status';
+import ApiSigner from '@polkadot/react-signer/signers/ApiSigner';
+import { keyring } from '@polkadot/ui-keyring';
 import { settings } from '@polkadot/ui-settings';
 import { formatBalance, isTestChain } from '@polkadot/util';
 import { defaults as addressDefaults } from '@polkadot/util-crypto/address/defaults';
-import type BN from 'bn.js';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import store from 'store';
-import { useApi } from '../../../hooks';
-import { TokenUnit } from '../../react-components/src/InputNumber';
-import { StatusContext } from '../../react-components/src/Status';
-import ApiSigner from '../../react-signer/src/signers/ApiSigner';
+
 import ApiContext from './ApiContext';
 import registry from './typeRegistry';
-import type { ApiProps, ApiState } from './types';
 import { decodeUrlTypes } from './urlTypes';
 
 interface Props {
   children: React.ReactNode;
-  url?: string;
+  apiUrl: string;
   store?: KeyringStore;
 }
 
@@ -72,7 +72,6 @@ function getDevTypes(): Record<string, Record<string, string>> {
   const types = decodeUrlTypes() || (store.get('types', {}) as Record<string, Record<string, string>>);
   const names = Object.keys(types);
 
-  // eslint-disable-next-line
   names.length && console.log('Injected types:', names.join(', '));
 
   return types;
@@ -126,7 +125,6 @@ async function retrieve(api: ApiPromise, injectedPromise: Promise<InjectedExtens
   };
 }
 
-// eslint-disable-next-line complexity
 async function loadOnReady(
   api: ApiPromise,
   injectedPromise: Promise<InjectedExtension[]>,
@@ -144,6 +142,8 @@ async function loadOnReady(
   const isEthereum = ethereumChains.includes(api.runtimeVersion.specName.toString());
   const isDevelopment = systemChainType.isDevelopment || systemChainType.isLocal || isTestChain(systemChain);
 
+  console.log(`chain: ${systemChain} (${systemChainType.toString()}), ${JSON.stringify(properties)}`);
+
   // explicitly override the ss58Format as specified
   registry.setChainProperties(registry.createType('ChainProperties', { ss58Format, tokenDecimals, tokenSymbol }));
 
@@ -155,11 +155,10 @@ async function loadOnReady(
   TokenUnit.setAbbr(tokenSymbol[0].toString());
 
   // finally load the keyring
-  const isLoaded = isKeyringLoaded();
-
-  if (!isLoaded) {
+  isKeyringLoaded() ||
     keyring.loadAll(
       {
+        genesisHash: api.genesisHash,
         isDevelopment,
         ss58Format,
         store,
@@ -167,7 +166,6 @@ async function loadOnReady(
       },
       injectedAccounts
     );
-  }
 
   const defaultSection = Object.keys(api.tx)[0];
   const defaultMethod = Object.keys(api.tx[defaultSection])[0];
@@ -191,61 +189,72 @@ async function loadOnReady(
   };
 }
 
-function Api({ children, store }: Props): React.ReactElement<Props> | null {
+function Api({ apiUrl, children, store }: Props): React.ReactElement<Props> | null {
   const { queuePayload, queueSetTxStatus } = useContext(StatusContext);
   const [state, setState] = useState<ApiState>({
     hasInjectedAccounts: false,
     isApiReady: false,
   } as unknown as ApiState);
+  const [isApiConnected, setIsApiConnected] = useState(false);
+  const [isApiInitialized, setIsApiInitialized] = useState(false);
   const [apiError, setApiError] = useState<null | string>(null);
-  const {
-    api: iApi,
-    networkConfig: { rpc: url },
-    extensions,
-    networkStatus,
-    setNetworkStatus,
-  } = useApi();
+  const [extensions, setExtensions] = useState<InjectedExtension[] | undefined>();
 
   const value = useMemo<ApiProps>(
     () => ({
       ...state,
-      api: iApi as ApiPromise,
+      api,
       apiError,
-      apiUrl: url,
+      apiUrl,
       extensions,
-      isApiConnected: networkStatus === 'success',
-      isApiInitialized: !!iApi,
+      isApiConnected,
+      isApiInitialized,
       isWaitingInjected: !extensions,
     }),
-    [state, iApi, apiError, url, extensions, networkStatus]
+    [apiError, extensions, isApiConnected, isApiInitialized, state, apiUrl]
   );
 
+  // initial initialization
   useEffect((): void => {
-    if (!iApi) {
-      return;
-    }
+    let provider;
 
-    api = iApi;
+    if (apiUrl.startsWith('light://')) {
+      const detect = new Detector('polkadot-js/apps');
+
+      provider = detect.provider({ name: apiUrl.replace('light://substrate-connect/', ''), spec: '' });
+      provider.connect().catch(console.error);
+    } else {
+      provider = new WsProvider(apiUrl);
+    }
 
     const signer = new ApiSigner(registry, queuePayload, queueSetTxStatus);
     const types = getDevTypes();
 
-    iApi.setSigner(signer);
+    api = new ApiPromise({ provider, registry, signer, types, typesBundle, typesChain });
 
-    iApi.on('disconnected', () => setNetworkStatus('disconnected'));
-    iApi.on('error', (error: Error) => setApiError(error.message));
+    api.on('connected', () => setIsApiConnected(true));
+    api.on('disconnected', () => setIsApiConnected(false));
+    api.on('error', (error: Error) => setApiError(error.message));
+    api.on('ready', (): void => {
+      const injectedPromise = web3Enable('polkadot-js/apps');
 
-    loadOnReady(iApi, Promise.resolve(extensions || []), store, types)
-      .then((data) => {
-        setState(data);
-        setNetworkStatus('success');
-      })
-      .catch((error): void => {
-        console.error(error);
+      injectedPromise.then(setExtensions).catch(console.error);
 
-        setApiError((error as Error).message);
-      });
-  }, [extensions, iApi, queuePayload, queueSetTxStatus, setNetworkStatus, store]);
+      loadOnReady(api, injectedPromise, store, types)
+        .then(setState)
+        .catch((error): void => {
+          console.error(error);
+
+          setApiError((error as Error).message);
+        });
+    });
+
+    setIsApiInitialized(true);
+  }, [apiUrl, queuePayload, queueSetTxStatus, store]);
+
+  if (!value.isApiInitialized) {
+    return null;
+  }
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }

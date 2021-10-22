@@ -19,6 +19,7 @@ interface TableProps {
   isFixed?: boolean;
   legend?: React.ReactNode;
   noBodyTag?: boolean;
+  withCollapsibleRows: boolean;
 }
 
 function extractBodyChildren(children: React.ReactNode): [boolean, React.ReactNode] {
@@ -43,13 +44,18 @@ function Table({
   isFixed,
   legend,
   noBodyTag,
+  withCollapsibleRows = false,
 }: TableProps): React.ReactElement<TableProps> {
   const [isEmpty, bodyChildren] = extractBodyChildren(children);
 
   return (
     <div className={`ui--Table ${className}`}>
       {legend}
-      <table className={`${isFixed && !isEmpty ? 'isFixed' : 'isNotFixed'} highlight--bg-faint`}>
+      <table
+        className={`${isFixed && !isEmpty ? 'isFixed' : 'isNotFixed'} highlight--bg-faint${
+          withCollapsibleRows ? ' withCollapsibleRows' : ''
+        }`}
+      >
         <Head filter={filter} header={header} isEmpty={isEmpty} />
         <Body empty={empty} emptySpinner={emptySpinner} noBodyTag={noBodyTag}>
           {bodyChildren}
@@ -102,6 +108,14 @@ export default React.memo(styled(Table)`
             white-space: normal;
           }
         }
+      }
+    }
+
+    &.withCollapsibleRows tbody tr {
+      background-color: unset;
+      &:nth-child(4n - 2),
+      &:nth-child(4n - 3) {
+        background-color: var(--bg-table);
       }
     }
   }
@@ -262,8 +276,8 @@ export default React.memo(styled(Table)`
     }
 
     tr {
-      &:nth-child(odd):not(.isEven),
-      &:nth-child(even).isOdd {
+      &.hasOddRowColoring,
+      &:nth-child(odd) {
         background: var(--bg-table);
       }
 

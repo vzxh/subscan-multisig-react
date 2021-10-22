@@ -1,32 +1,33 @@
-/* eslint-disable no-invalid-this */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { keyring } from '@polkadot/ui-keyring';
-import { createOptionItem } from '@polkadot/ui-keyring/options/item';
 import type {
   KeyringOption$Type,
   KeyringOptions,
   KeyringSectionOption,
   KeyringSectionOptions,
 } from '@polkadot/ui-keyring/options/types';
-import { isNull, isUndefined } from '@polkadot/util';
+import type { Option } from './types';
+
 import React from 'react';
 import store from 'store';
 import styled from 'styled-components';
+
 import { withMulti, withObservable } from '@polkadot/react-api/hoc';
+import { keyring } from '@polkadot/ui-keyring';
+import { createOptionItem } from '@polkadot/ui-keyring/options/item';
+import { isNull, isUndefined } from '@polkadot/util';
+
 import Dropdown from '../Dropdown';
 import Static from '../Static';
-import { getAddressName } from '../util';
-import addressToAddress from '../util/toAddress';
+import { getAddressName, toAddress } from '../util';
 import createHeader from './createHeader';
 import createItem from './createItem';
-import type { Option } from './types';
 
 interface Props {
   className?: string;
   defaultValue?: Uint8Array | string | null;
-  filter?: string[];
+  filter?: string[] | null;
   help?: React.ReactNode;
   hideAddress?: boolean;
   isDisabled?: boolean;
@@ -62,7 +63,7 @@ const MULTI_DEFAULT: string[] = [];
 
 function transformToAddress(value?: string | Uint8Array | null): string | null {
   try {
-    return addressToAddress(value) || null;
+    return toAddress(value) || null;
   } catch (error) {
     // noop, handled by return
   }
@@ -119,21 +120,20 @@ function setLastValue(type: KeyringOption$Type = DEFAULT_TYPE, value: string): v
 }
 
 class InputAddress extends React.PureComponent<Props, State> {
-  public state: State = {};
+  public override state: State = {};
 
   public static getDerivedStateFromProps({ type, value }: Props, { lastValue }: State): Pick<State, never> | null {
     try {
       return {
         lastValue: lastValue || getLastValue(type),
-        value: Array.isArray(value) ? value.map((v) => addressToAddress(v)) : addressToAddress(value) || undefined,
+        value: Array.isArray(value) ? value.map((v) => toAddress(v)) : toAddress(value) || undefined,
       };
     } catch (error) {
       return null;
     }
   }
 
-  // eslint-disable-next-line complexity
-  public render(): React.ReactNode {
+  public override render(): React.ReactNode {
     const {
       className = '',
       defaultValue,
@@ -229,10 +229,8 @@ class InputAddress extends React.PureComponent<Props, State> {
   private onChange = (address: string): void => {
     const { filter, onChange, type } = this.props;
 
-    // eslint-disable-next-line
     !filter && setLastValue(type, address);
 
-    // eslint-disable-next-line
     onChange && onChange(this.hasValue(address) ? transformToAccountId(address) : null);
   };
 
@@ -274,42 +272,12 @@ class InputAddress extends React.PureComponent<Props, State> {
 }
 
 export const PureInputAddress = styled(InputAddress)`
-  .ui.dropdown .text {
-    width: 100%;
+  .ui.dropdown .text {...
   }
-
-  .ui.disabled.search {
-    pointer-events: all;
+  .ui.disabled.search {...
   }
-
-  .ui.search.selection.dropdown {
-    > .text > .ui--KeyPair {
-      .ui--IdentityIcon {
-        left: -2.75rem;
-        top: -1.05rem;
-
-        > div,
-        img,
-        svg {
-          height: 32px !important;
-          width: 32px !important;
-        }
-      }
-
-      .name {
-        margin-left: 0;
-
-        > .ui--AccountName {
-          height: auto;
-        }
-      }
-    }
-
-    > .menu > div.item > .ui--KeyPair > .name > .ui--AccountName {
-      height: auto;
-    }
+  .ui.search.selection.dropdown {...
   }
-
   &.hideAddress .ui.search.selection.dropdown > .text > .ui--KeyPair .address {
     flex: 0;
     max-width: 0;

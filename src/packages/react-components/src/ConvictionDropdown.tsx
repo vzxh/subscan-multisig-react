@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,8 +7,8 @@ import BN from 'bn.js';
 import React, { useRef } from 'react';
 
 import { ApiPromise } from '@polkadot/api';
-import { BN_THOUSAND } from '@polkadot/util';
 import { useApi, useBlockTime } from '@polkadot/react-hooks';
+import { BN_THOUSAND } from '@polkadot/util';
 
 import Dropdown from './Dropdown';
 import { useTranslation } from './translate';

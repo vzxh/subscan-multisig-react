@@ -1,6 +1,3 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-query authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +9,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { useApi } from '@polkadot/react-hooks';
-import { formatBalance } from '@polkadot/util';
+import { formatBalance, isString } from '@polkadot/util';
 
 import { useTranslation } from './translate';
 
@@ -23,7 +20,7 @@ interface Props {
   formatIndex?: number;
   isShort?: boolean;
   label?: React.ReactNode;
-  labelPost?: string;
+  labelPost?: LabelPost;
   value?: Compact<any> | BN | string | null | 'all';
   valueFormatted?: string;
   withCurrency?: boolean;
@@ -33,6 +30,8 @@ interface Props {
 // for million, 2 * 3-grouping + comma
 const M_LENGTH = 6 + 1;
 const K_LENGTH = 3 + 1;
+
+type LabelPost = string | React.ReactNode;
 
 function getFormat(registry: Registry, formatIndex = 0): [number, string] {
   const decimals = registry.chainDecimals;
@@ -44,7 +43,13 @@ function getFormat(registry: Registry, formatIndex = 0): [number, string] {
   ];
 }
 
-function createElement(prefix: string, postfix: string, unit: string, label = '', isShort = false): React.ReactNode {
+function createElement(
+  prefix: string,
+  postfix: string,
+  unit: string,
+  label: LabelPost = '',
+  isShort = false
+): React.ReactNode {
   return (
     <>
       {`${prefix}${isShort ? '' : '.'}`}
@@ -55,7 +60,7 @@ function createElement(prefix: string, postfix: string, unit: string, label = ''
   );
 }
 
-function splitFormat(value: string, label?: string, isShort?: boolean): React.ReactNode {
+function splitFormat(value: string, label?: LabelPost, isShort?: boolean): React.ReactNode {
   const [prefix, postfixFull] = value.split('.');
   const [postfix, unit] = postfixFull.split(' ');
 
@@ -68,7 +73,7 @@ function applyFormat(
   withCurrency = true,
   withSi?: boolean,
   _isShort?: boolean,
-  labelPost?: string
+  labelPost?: LabelPost
 ): React.ReactNode {
   const [prefix, postfix] = formatBalance(value, { decimals, forceUnit: '-', withSi: false }).split('.');
   const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
@@ -116,14 +121,23 @@ function FormatBalance({
   return (
     <div className={`ui--FormatBalance ${className}`}>
       {label ? <>{label}&nbsp;</> : ''}
-      <span className="ui--FormatBalance-value">
-        {valueFormatted
-          ? splitFormat(valueFormatted, labelPost, isShort)
-          : value
-          ? value === 'all'
-            ? t<string>('everything{{labelPost}}', { replace: { labelPost } })
-            : applyFormat(value, formatInfo, withCurrency, withSi, isShort, labelPost)
-          : `-${labelPost || ''}`}
+      <span className="ui--FormatBalance-value" data-testid="balance-summary">
+        {valueFormatted ? (
+          splitFormat(valueFormatted, labelPost, isShort)
+        ) : value ? (
+          value === 'all' ? (
+            <>
+              {t<string>('everything')}
+              {labelPost || ''}
+            </>
+          ) : (
+            applyFormat(value, formatInfo, withCurrency, withSi, isShort, labelPost)
+          )
+        ) : isString(labelPost) ? (
+          `-${labelPost}`
+        ) : (
+          labelPost
+        )}
       </span>
       {children}
     </div>

@@ -1,11 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import BN from 'bn.js';
-import React, { useCallback, useState } from 'react';
 import type { Props } from '../types';
 
-import { InputBalance } from '../../../react-components/src';
+import BN from 'bn.js';
+import React, { useCallback, useState } from 'react';
+
+import { InputBalance } from '@polkadot/react-components';
 
 import Bare from './Bare';
 
@@ -24,16 +25,15 @@ function Balance({
   const [defaultValue] = useState(() => new BN(((value as BN) || '0').toString()).toString(10));
 
   const _onChange = useCallback(
-    (val?: BN): void => {
-      const beValid = !isError && !!val;
+    (value?: BN): void => {
+      const isValid = !isError && !!value;
 
-      // eslint-disable-next-line
       onChange &&
         onChange({
-          isValid: beValid,
-          value: val,
+          isValid,
+          value,
         });
-      setIsValid(beValid);
+      setIsValid(isValid);
     },
     [isError, onChange]
   );

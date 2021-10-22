@@ -1,10 +1,10 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import strengthTester from 'owasp-password-strength-test';
 import React from 'react';
 import styled from 'styled-components';
+
 import { useTranslation } from './translate';
 
 const MAX_STRENGTH = 7; // equal to number of password tests in owasp strength tester

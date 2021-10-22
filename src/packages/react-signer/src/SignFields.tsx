@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-shadow */
 // Copyright 2017-2021 @polkadot/react-signer authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,9 +6,9 @@ import type { SignerOptions } from '@polkadot/api/submittable/types';
 import BN from 'bn.js';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { InputNumber, Modal, Output } from '@polkadot/react-components';
+import { useApi } from '@polkadot/react-hooks';
 import { BN_ZERO } from '@polkadot/util';
-import { InputNumber, Modal, Output } from '../../react-components/src';
-import { useApi } from '../../react-hooks/src';
 
 import { useTranslation } from './translate';
 
@@ -28,7 +26,6 @@ function SignFields({ address, onChange, signedTx }: Props): React.ReactElement<
   const { t } = useTranslation();
 
   useEffect((): void => {
-    // eslint-disable-next-line
     address &&
       api.derive.balances
         .account(address)
@@ -40,9 +37,9 @@ function SignFields({ address, onChange, signedTx }: Props): React.ReactElement<
     onChange({ era: blocks.toNumber(), nonce });
   }, [blocks, nonce, onChange]);
 
-  const _setBlocks = useCallback((blocks = BN_ZERO) => setBlocks(blocks), []);
+  const _setBlocks = useCallback((blocks: BN = BN_ZERO) => setBlocks(blocks), []);
 
-  const _setNonce = useCallback((nonce = BN_ZERO) => setNonce(nonce), []);
+  const _setNonce = useCallback((nonce: BN = BN_ZERO) => setNonce(nonce), []);
 
   return (
     <>

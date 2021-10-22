@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { DispatchError } from '@polkadot/types/interfaces';
-import React, { useEffect, useState } from 'react';
 import type { Props as BaseProps } from '../types';
 
-import { Input } from '../../../react-components/src';
+import React, { useEffect, useState } from 'react';
+
+import { Input } from '@polkadot/react-components';
 
 import { useTranslation } from '../translate';
 import Static from './Static';
@@ -28,7 +29,6 @@ function ErrorDisplay(props: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const [{ details, type }, setDetails] = useState<Details>({});
 
-  // eslint-disable-next-line complexity
   useEffect((): void => {
     const { value } = props.defaultValue || {};
 
@@ -36,10 +36,10 @@ function ErrorDisplay(props: Props): React.ReactElement<Props> {
       if (value.isModule) {
         try {
           const mod = value.asModule;
-          const { documentation, name, section } = mod.registry.findMetaError(mod);
+          const { docs, name, section } = mod.registry.findMetaError(mod);
 
           return setDetails({
-            details: documentation.join(', '),
+            details: docs.join(', '),
             type: `${section}.${name}`,
           });
         } catch (error) {

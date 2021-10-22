@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { QueryableStorageEntry } from '@polkadot/api/types';
+import type { DropdownOptions } from '../util/types';
 
 import React from 'react';
 
 import { ApiPromise } from '@polkadot/api';
 import { useApi } from '@polkadot/react-hooks';
-import type { DropdownOptions } from '../util/types';
 
 import Dropdown from '../Dropdown';
 
@@ -21,7 +21,7 @@ interface Props {
 
 function transform(api: ApiPromise, { value }: Props): (method: string) => QueryableStorageEntry<'promise'> {
   return function (method: string): QueryableStorageEntry<'promise'> {
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return api.query[value.creator.section] ? (api.query[value.creator.section][method] as any) : value;
   };
 }

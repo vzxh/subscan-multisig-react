@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Registry, TypeDef } from '@polkadot/types/types';
-import React, { useCallback } from 'react';
-import Param from './Param';
 import type { ComponentMap, RawParam, RawParamOnChangeValue, RawParams } from './types';
+
+import React, { useCallback } from 'react';
+
+import Param from './Param';
 
 interface Props {
   defaultValue: RawParam;

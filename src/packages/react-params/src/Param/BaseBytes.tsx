@@ -1,15 +1,14 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { TypeDef } from '@polkadot/types/types';
+import type { RawParam, RawParamOnChange, RawParamOnEnter, RawParamOnEscape, Size } from '../types';
 
 import React, { useCallback, useState } from 'react';
 
+import { CopyButton, Input } from '@polkadot/react-components';
 import { compactAddLength, hexToU8a, isAscii, isHex, isU8a, stringToU8a, u8aToHex, u8aToString } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
-import { CopyButton, Input } from '../../../react-components/src';
-import type { RawParam, RawParamOnChange, RawParamOnEnter, RawParamOnEscape, Size } from '../types';
 
 import { useTranslation } from '../translate';
 import Bare from './Bare';
@@ -83,30 +82,29 @@ function BaseBytes({
         ? u8aToString(value)
         : isHex(value)
         ? value
-        : // eslint-disable-next-line no-magic-numbers
-          u8aToHex(value as Uint8Array, isDisabled ? 256 : -1)
+        : u8aToHex(value as Uint8Array, isDisabled ? 256 : -1)
       : undefined
   );
   const [isValid, setIsValid] = useState(false);
 
   const _onChange = useCallback(
     (hex: string): void => {
-      let [beValid, val] = convertInput(hex);
+      let [isValid, value] = convertInput(hex);
 
-      beValid = beValid && validate(val) && (length !== -1 ? val.length === length : val.length !== 0);
+      isValid =
+        isValid && validate(value) && (length !== -1 ? value.length === length : value.length !== 0 || hex === '0x');
 
-      if (withLength && beValid) {
-        val = compactAddLength(val);
+      if (withLength && isValid) {
+        value = compactAddLength(value);
       }
 
-      // eslint-disable-next-line
       onChange &&
         onChange({
-          isValid: beValid,
-          value: asHex ? u8aToHex(val) : val,
+          isValid,
+          value: asHex ? u8aToHex(value) : value,
         });
 
-      setIsValid(beValid);
+      setIsValid(isValid);
     },
     [asHex, length, onChange, validate, withLength]
   );

@@ -6,9 +6,9 @@ import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { useApi, useCall } from '@polkadot/react-hooks';
 import { BalanceVoting } from '@polkadot/react-query';
 import { BN_ZERO } from '@polkadot/util';
-import { useApi, useCall } from '@polkadot/react-hooks';
 
 import InputBalance from './InputBalance';
 import { useTranslation } from './translate';
@@ -50,7 +50,6 @@ function VoteValue({ accountId, autoFocus, isCouncil, onChange }: Props): React.
 
   useEffect((): void => {
     // if the set accountId changes and the new balances is for that id, set it
-    // eslint-disable-next-line
     allBalances &&
       allBalances.accountId.eq(accountId) &&
       setValue((state) =>
@@ -66,9 +65,9 @@ function VoteValue({ accountId, autoFocus, isCouncil, onChange }: Props): React.
   }, [onChange, value]);
 
   const _setValue = useCallback(
-    (val?: BN) =>
+    (value?: BN) =>
       setValue((state) =>
-        state.selectedId === accountId && val && !val.eq(state.value) ? { ...state, value: val } : state
+        state.selectedId === accountId && value && !value.eq(state.value) ? { ...state, value } : state
       ),
     [accountId]
   );
@@ -80,7 +79,7 @@ function VoteValue({ accountId, autoFocus, isCouncil, onChange }: Props): React.
       autoFocus={autoFocus}
       defaultValue={isDisabled ? undefined : value}
       help={t<string>(
-        'The amount that is associated with this vote. This value is is locked for the duration of the vote.'
+        'The amount that is associated with this vote. This value is locked for the duration of the vote.'
       )}
       isDisabled={isDisabled}
       isZeroable

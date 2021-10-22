@@ -4,9 +4,11 @@
 // TODO: We have a lot shared between this and InputExtrinsic
 
 import type { QueryableStorageEntry } from '@polkadot/api/types';
-import React, { useCallback, useState } from 'react';
-import { useApi } from '@polkadot/react-hooks';
 import type { DropdownOptions } from '../util/types';
+
+import React, { useCallback, useState } from 'react';
+
+import { useApi } from '@polkadot/react-hooks';
 
 import LinkedWrapper from '../InputExtrinsic/LinkedWrapper';
 import keyOptions from './options/key';
@@ -44,7 +46,6 @@ function InputStorage({
       if (value.creator.section !== newValue.creator.section || value.creator.method !== newValue.creator.method) {
         // set via callback
         setValue(() => newValue);
-        // eslint-disable-next-line
         onChange && onChange(newValue);
       }
     },
@@ -54,11 +55,10 @@ function InputStorage({
   const _onSectionChange = useCallback(
     (section: string): void => {
       if (section !== value.creator.section) {
-        const res = keyOptions(api, section);
+        const optionsMethod = keyOptions(api, section);
 
-        setOptionsMethod(res);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        _onKeyChange(api.query[section][res[0].value] as any);
+        setOptionsMethod(optionsMethod);
+        _onKeyChange(api.query[section][optionsMethod[0].value]);
       }
     },
     [_onKeyChange, api, value]

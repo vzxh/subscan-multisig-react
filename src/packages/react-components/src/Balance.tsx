@@ -28,7 +28,6 @@ export function renderProvided({ className = '', label, value }: RenderProps): R
 
   if (Array.isArray(value)) {
     const totals = value.filter((_, index): boolean => index !== 0);
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const total = totals.reduce((total, value): BN => total.add(value), BN_ZERO).gtn(0);
 
     if (total) {

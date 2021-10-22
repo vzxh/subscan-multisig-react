@@ -1,11 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useRef, useState } from 'react';
-import { isBoolean } from '@polkadot/util';
 import type { Props } from '../types';
 
-import { Dropdown } from '../../../react-components/src';
+import React, { useCallback, useRef, useState } from 'react';
+
+import { Dropdown } from '@polkadot/react-components';
+import { isBoolean } from '@polkadot/util';
 
 import { useTranslation } from '../translate';
 import Bare from './Bare';
@@ -28,11 +29,11 @@ function BoolParam({
   ]);
 
   const _onChange = useCallback(
-    (val: boolean) =>
+    (value: boolean) =>
       onChange &&
       onChange({
         isValid: true,
-        value: val,
+        value,
       }),
     [onChange]
   );

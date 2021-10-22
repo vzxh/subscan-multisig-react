@@ -16,7 +16,6 @@ interface Props {
 
 function Checkbox({ className = '', isDisabled, label, onChange, value }: Props): React.ReactElement<Props> {
   const _onClick = useCallback((): void => {
-    // eslint-disable-next-line
     !isDisabled && onChange && onChange(!value);
   }, [isDisabled, onChange, value]);
 

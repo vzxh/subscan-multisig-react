@@ -1,11 +1,12 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useState } from 'react';
-import { keyring } from '@polkadot/ui-keyring';
 import type { Props } from '../types';
 
-import { InputAddress } from '../../../react-components/src';
+import React, { useCallback, useState } from 'react';
+
+import { InputAddress } from '@polkadot/react-components';
+import { keyring } from '@polkadot/ui-keyring';
 
 import Bare from './Bare';
 
@@ -22,12 +23,12 @@ function Account({
   const [defaultValue] = useState(() => (value as string)?.toString());
 
   const _onChange = useCallback(
-    (addr?: string | null): void => {
+    (value?: string | null): void => {
       let isValid = false;
 
-      if (addr) {
+      if (value) {
         try {
-          keyring.decodeAddress(addr);
+          keyring.decodeAddress(value);
 
           isValid = true;
         } catch (err) {
@@ -35,8 +36,11 @@ function Account({
         }
       }
 
-      // eslint-disable-next-line
-      onChange && onChange({ isValid, value: addr });
+      onChange &&
+        onChange({
+          isValid,
+          value,
+        });
     },
     [onChange]
   );

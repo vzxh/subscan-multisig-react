@@ -1,13 +1,15 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-hooks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { ApiPromise } from '@polkadot/api';
 import type { DeriveEraPoints, DeriveEraRewards, DeriveStakerReward } from '@polkadot/api-derive/types';
 import type { EraIndex } from '@polkadot/types/interfaces';
-import { BN_ZERO } from '@polkadot/util';
-import { useEffect, useState } from 'react';
 import type { StakerState } from './types';
+
+import { useEffect, useState } from 'react';
+
+import { BN_ZERO } from '@polkadot/util';
+
 import { useApi } from './useApi';
 import { useCall } from './useCall';
 import { useIsMountedRef } from './useIsMountedRef';
@@ -28,6 +30,16 @@ interface Filtered {
   filteredEras: EraIndex[];
   validatorEras: ValidatorWithEras[];
 }
+
+const EMPTY_FILTERED: Filtered = {
+  filteredEras: [],
+  validatorEras: [],
+};
+
+const EMPTY_STATE: State = {
+  isLoadingRewards: true,
+  rewardCount: 0,
+};
 
 function getRewards([[stashIds], available]: [[string[]], DeriveStakerReward[][]]): State {
   const allRewards: Record<string, DeriveStakerReward[]> = {};
@@ -96,8 +108,8 @@ export function useOwnEraRewards(maxEras?: number, ownValidators?: StakerState[]
   const mountedRef = useIsMountedRef();
   const stashIds = useOwnStashIds();
   const allEras = useCall<EraIndex[]>(api.derive.staking?.erasHistoric);
-  const [{ filteredEras, validatorEras }, setFiltered] = useState<Filtered>({ filteredEras: [], validatorEras: [] });
-  const [state, setState] = useState<State>({ isLoadingRewards: true, rewardCount: 0 });
+  const [{ filteredEras, validatorEras }, setFiltered] = useState<Filtered>(EMPTY_FILTERED);
+  const [state, setState] = useState<State>(EMPTY_STATE);
   const stakerRewards = useCall<[[string[]], DeriveStakerReward[][]]>(
     !ownValidators?.length && !!filteredEras.length && stashIds && api.derive.staking?.stakerRewardsMultiEras,
     [stashIds, filteredEras],
@@ -118,9 +130,7 @@ export function useOwnEraRewards(maxEras?: number, ownValidators?: StakerState[]
 
   useEffect((): void => {
     if (allEras && maxEras) {
-      // eslint-disable-next-line
       const filteredEras = allEras.slice(-1 * maxEras);
-      // eslint-disable-next-line
       const validatorEras: ValidatorWithEras[] = [];
 
       if (allEras.length === 0) {
@@ -156,12 +166,10 @@ export function useOwnEraRewards(maxEras?: number, ownValidators?: StakerState[]
   }, [allEras, maxEras, ownValidators]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     mountedRef.current && stakerRewards && !ownValidators && setState(getRewards(stakerRewards));
   }, [mountedRef, ownValidators, stakerRewards]);
 
   useEffect((): void => {
-    // eslint-disable-next-line
     mountedRef &&
       erasPoints &&
       erasRewards &&

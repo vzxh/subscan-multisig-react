@@ -1,15 +1,17 @@
-/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Params } from '@polkadot/react-params';
-import { FormatBalance } from '@polkadot/react-query';
-import { Enum, GenericCall, getTypeDef } from '@polkadot/types';
+import type BN from 'bn.js';
 import type { ExtrinsicSignature } from '@polkadot/types/interfaces';
 import type { Codec, IExtrinsic, IMethod, TypeDef } from '@polkadot/types/types';
-import type BN from 'bn.js';
+
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
+import Params from '@polkadot/react-params';
+import { FormatBalance } from '@polkadot/react-query';
+import { Enum, getTypeDef } from '@polkadot/types';
+
 import Static from './Static';
 import { useTranslation } from './translate';
 
@@ -51,21 +53,21 @@ function isExtrinsic(value: IExtrinsic | IMethod): value is IExtrinsic {
 
 // This is no doubt NOT the way to do things - however there is no other option
 function getRawSignature(value: IExtrinsic): ExtrinsicSignature | undefined {
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return (value as any)._raw?.signature?.multiSignature as ExtrinsicSignature;
 }
 
 function extractState(value: IExtrinsic | IMethod, withHash?: boolean, withSignature?: boolean): Extracted {
-  const params = GenericCall.filterOrigin(value.meta).map(
+  const params = value.meta.args.map(
     ({ name, type }): Param => ({
       name: name.toString(),
       type: getTypeDef(type.toString()),
     })
   );
   const values = value.args.map(
-    (val): Value => ({
+    (value): Value => ({
       isValid: true,
-      value: val,
+      value,
     })
   );
   const hash = withHash ? value.hash.toHex() : null;

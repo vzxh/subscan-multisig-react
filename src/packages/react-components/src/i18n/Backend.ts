@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,7 +31,7 @@ export default class Backend {
 
   async createLoader(lng: string): Promise<LoadResult> {
     try {
-      const response = await fetch(`/locales/${lng}/translation.json`, {});
+      const response = await fetch(`locales/${lng}/translation.json`, {});
 
       if (!response.ok) {
         return [`i18n: failed loading ${lng}`, response.status >= 500 && response.status < 600];

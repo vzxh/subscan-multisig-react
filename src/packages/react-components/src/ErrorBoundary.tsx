@@ -1,9 +1,11 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
-import translate from './translate';
 import type { I18nProps } from './types';
+
+import React from 'react';
+
+import translate from './translate';
 
 interface Props extends I18nProps {
   children: React.ReactNode;
@@ -20,7 +22,7 @@ interface State {
 
 // NOTE: This is the only way to do an error boundary, via extend
 class ErrorBoundary extends React.Component<Props> {
-  state: State = { error: null, prevTrigger: null };
+  public override state: State = { error: null, prevTrigger: null };
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return { error };
@@ -32,10 +34,9 @@ class ErrorBoundary extends React.Component<Props> {
     return prevTrigger !== newTrigger ? { error: null, prevTrigger: newTrigger } : null;
   }
 
-  public componentDidCatch(error: Error): void {
+  public override componentDidCatch(error: Error): void {
     const { doThrow, onError } = this.props;
 
-    // eslint-disable-next-line
     onError && onError();
 
     if (doThrow) {
@@ -43,7 +44,7 @@ class ErrorBoundary extends React.Component<Props> {
     }
   }
 
-  public render(): React.ReactNode {
+  public override render(): React.ReactNode {
     const { children, error: errorProps, t } = this.props;
     const { error } = this.state;
     const displayError = errorProps || error;

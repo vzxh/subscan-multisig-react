@@ -5,9 +5,8 @@ import React from 'react';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import ReactDOM from 'react-dom';
 
+import { PORTAL_ID } from '../../../apps/src/Apps';
 import AddressToggle from '../AddressToggle';
-
-const PORTAL_ID = 'portals';
 
 interface Props {
   address: string;

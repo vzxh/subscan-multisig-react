@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Location } from 'history';
+import type { SectionType, TabItem } from './types';
+
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+
 import CurrentSection from './CurrentSection';
 import Tab from './Tab';
 import Delimiter from './TabsSectionDelimiter';
-import type { SectionType, TabItem } from './types';
 
 export const TabsContext = React.createContext<SectionType>({});
 
@@ -20,12 +22,10 @@ interface Props {
 }
 
 // redirect on invalid tabs
-// eslint-disable-next-line complexity
 function redirect(basePath: string, location: Location, items: TabItem[], hidden?: string[] | null | false): void {
   if (location.pathname !== basePath) {
     // Has the form /staking/query/<something>
     const [, , section] = location.pathname.split('/');
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     const alias = items.find(({ alias }) => alias === section);
 
     if (alias) {

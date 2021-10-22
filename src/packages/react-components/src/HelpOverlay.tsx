@@ -26,8 +26,6 @@ function HelpOverlay({ className = '', md }: Props): React.ReactElement<Props> {
         <div className="help-button">
           <Icon icon="times" onClick={toggleVisible} />
         </div>
-        {/* eslint-disable-next-line */}
-        {/* @ts-ignore */}
         <ReactMd className="help-content" escapeHtml={false} source={md} />
       </div>
     </div>

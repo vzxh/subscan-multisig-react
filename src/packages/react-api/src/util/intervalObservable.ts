@@ -1,9 +1,9 @@
-/* eslint-disable no-magic-numbers */
 // Copyright 2017-2021 @polkadot/react-api authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { interval, Subscription } from '@polkadot/x-rxjs';
 import type { CallState } from '../types';
+
+import { interval, Subscription } from 'rxjs';
 
 const interval$ = interval(500);
 

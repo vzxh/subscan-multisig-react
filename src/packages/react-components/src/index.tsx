@@ -1,6 +1,8 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+export * from '@polkadot/react-qr';
+
 export { default as AccountIndex } from './AccountIndex';
 export { default as AccountName } from './AccountName';
 export { default as AddressInfo } from './AddressInfo';
@@ -37,6 +39,7 @@ export { default as Event } from './Event';
 export { default as Expander } from './Expander';
 export { default as Extrinsic } from './Extrinsic';
 export { default as FilterOverlay } from './FilterOverlay';
+export { default as Flag } from './Flag';
 export { default as Forget } from './Forget';
 export { default as HelpOverlay } from './HelpOverlay';
 export { default as Icon } from './Icon';
@@ -94,5 +97,8 @@ export { default as TxButton } from './TxButton';
 export { default as VoteAccount } from './VoteAccount';
 export { default as VoteValue } from './VoteValue';
 export { default as TextArea } from './TextArea';
+export { default as ExpandButton } from './ExpandButton';
+export { default as SortDropdown } from './SortDropdown';
+export { default as FilterInput } from './FilterInput';
 
 export { default as media } from './media';

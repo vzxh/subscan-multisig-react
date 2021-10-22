@@ -7,7 +7,7 @@ import type { AccountId, Address } from '@polkadot/types/interfaces';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
-import { useApi, useCall } from '../../react-hooks/src';
+import { useApi, useCall } from '@polkadot/react-hooks';
 
 interface Props {
   children?: React.ReactNode;

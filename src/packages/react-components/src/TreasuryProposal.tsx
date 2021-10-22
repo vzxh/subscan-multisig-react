@@ -6,12 +6,12 @@ import type { TreasuryProposal as TreasuryProposalType } from '@polkadot/types/i
 
 import React, { useEffect, useState } from 'react';
 
-import { FormatBalance } from '@polkadot/react-query';
+import { InputAddress, Labelled, Static } from '@polkadot/react-components';
 import { useApi } from '@polkadot/react-hooks';
+import { FormatBalance } from '@polkadot/react-query';
 
 import Inset, { InsetProps } from './Inset';
 import { useTranslation } from './translate';
-import { InputAddress, Labelled, Static } from '.';
 
 interface Props {
   className?: string;
@@ -39,7 +39,6 @@ function TreasuryProposal({
     if (!proposal && proposalId) {
       api.query.treasury
         .proposals<Option<TreasuryProposalType>>(proposalId)
-        // eslint-disable-next-line @typescript-eslint/no-shadow
         .then((proposal): TreasuryProposalType | null => proposal.unwrapOr(null))
         .catch((): null => null)
         .then(setProposal)

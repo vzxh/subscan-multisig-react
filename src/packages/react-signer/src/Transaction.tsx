@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type BN from 'bn.js';
+import type { QueueTx } from '@polkadot/react-components/Status/types';
 
 import React from 'react';
 import styled from 'styled-components';
-import type { QueueTx } from '../../react-components/src/Status/types';
 
-import { Call, Expander, Modal } from '../../react-components/src';
+import { Call, Expander, Modal } from '@polkadot/react-components';
 
 import PaymentInfo from './PaymentInfo';
 import { useTranslation } from './translate';

@@ -1,11 +1,13 @@
 // Copyright 2017-2021 @polkadot/react-params authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { getTypeDef } from '@polkadot/types';
 import type { Registry, TypeDef } from '@polkadot/types/types';
+import type { ComponentMap, Props } from '../types';
+
+import { getTypeDef } from '@polkadot/types';
 import { TypeDefInfo } from '@polkadot/types/types';
 import { isBn } from '@polkadot/util';
-import type { ComponentMap, Props } from '../types';
+
 import Account from './Account';
 import Amount from './Amount';
 import Balance from './Balance';
@@ -36,7 +38,6 @@ import Vote from './Vote';
 import VoteThreshold from './VoteThreshold';
 
 interface TypeToComponent {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   c: React.ComponentType<any>;
   t: string[];
 }
@@ -74,18 +75,17 @@ const componentDef: TypeToComponent[] = [
   { c: Unknown, t: ['Unknown'] },
 ];
 
-const components: ComponentMap = componentDef.reduce((comps, { c, t }): ComponentMap => {
+const components: ComponentMap = componentDef.reduce((components, { c, t }): ComponentMap => {
   t.forEach((type): void => {
-    comps[type] = c;
+    components[type] = c;
   });
 
-  return comps;
+  return components;
 }, {} as unknown as ComponentMap);
 
 const warnList: string[] = [];
 
-// eslint-disable-next-line complexity
-function fromDef({ displayName, info, sub, type }: TypeDef): string {
+function fromDef({ displayName, info, lookupName, sub, type }: TypeDef): string {
   if (displayName && SPECIAL_TYPES.includes(displayName)) {
     return displayName;
   }
@@ -125,11 +125,10 @@ function fromDef({ displayName, info, sub, type }: TypeDef): string {
       return 'VecFixed';
 
     default:
-      return type;
+      return lookupName || type;
   }
 }
 
-// eslint-disable-next-line complexity
 export default function findComponent(
   registry: Registry,
   def: TypeDef,
@@ -146,13 +145,13 @@ export default function findComponent(
       const instance = registry.createType(type as 'u32');
       const raw = getTypeDef(instance.toRawType());
 
-      Component = findOne(raw.type);
+      Component = findOne(raw.lookupName || raw.type);
 
       if (Component) {
         return Component;
       } else if (isBn(instance)) {
         return Amount;
-      } else if ([TypeDefInfo.Enum, TypeDefInfo.Struct, TypeDefInfo.Tuple].includes(raw.info)) {
+      } else if ([TypeDefInfo.Enum, TypeDefInfo.Struct, TypeDefInfo.Tuple, TypeDefInfo.Vec].includes(raw.info)) {
         return findComponent(registry, raw, overrides);
       } else if (raw.info === TypeDefInfo.VecFixed && (raw.sub as TypeDef).type !== 'u8') {
         return findComponent(registry, raw, overrides);
@@ -164,10 +163,11 @@ export default function findComponent(
     // we only want to want once, not spam
     if (!warnList.includes(type)) {
       warnList.push(type);
-      // eslint-disable-next-line
       error && console.error(`params: findComponent: ${error}`);
       console.info(
-        `params: findComponent: No pre-defined component for type ${type} from ${JSON.stringify(def)}, using defaults`
+        `params: findComponent: No pre-defined component for type ${type} from ${
+          TypeDefInfo[def.info]
+        }: ${JSON.stringify(def)}`
       );
     }
   }
