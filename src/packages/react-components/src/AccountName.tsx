@@ -1,18 +1,16 @@
+/* eslint-disable no-magic-numbers */
+/* eslint-disable complexity */
 // Copyright 2017-2021 @polkadot/react-query authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import type { IconName } from '@fortawesome/fontawesome-svg-core';
 import type { DeriveAccountInfo, DeriveAccountRegistration } from '@polkadot/api-derive/types';
 import type { AccountId, AccountIndex, Address } from '@polkadot/types/interfaces';
-
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { isFunction, stringToU8a } from '@polkadot/util';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import { AccountSidebarToggle } from '@polkadot/app-accounts/Sidebar';
 import registry from '@polkadot/react-api/typeRegistry';
 import { useApi, useCall } from '@polkadot/react-hooks';
-import { isFunction, stringToU8a } from '@polkadot/util';
-
 import Badge from './Badge';
 import { getAddressName } from './util';
 
@@ -48,6 +46,7 @@ function defaultOrAddr(
   _address: AccountId | AccountIndex | Address | string | Uint8Array,
   _accountIndex?: AccountIndex | null
 ): [React.ReactNode, boolean, boolean, boolean] {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const known = KNOWN.find(([known]) => known.eq(_address));
 
   if (known) {
@@ -135,7 +134,7 @@ function AccountName({
   const [name, setName] = useState<React.ReactNode>(() =>
     extractName((value || '').toString(), undefined, defaultName)
   );
-  const toggleSidebar = useContext(AccountSidebarToggle);
+  // const toggleSidebar = useContext(AccountSidebarToggle);
 
   // set the actual nickname, local name, accountIndex, accountId
   useEffect((): void => {
@@ -155,20 +154,25 @@ function AccountName({
     }
   }, [api, defaultName, info, toggle, value]);
 
-  const _onNameEdit = useCallback(
-    () => setName(defaultOrAddr(defaultName, (value || '').toString())),
-    [defaultName, value]
-  );
+  // const _onNameEdit = useCallback(
+  //   () => setName(defaultOrAddr(defaultName, (value || '').toString())),
+  //   [defaultName, value]
+  // );
 
   const _onToggleSidebar = useCallback(
-    () => toggleSidebar && value && toggleSidebar([value.toString(), _onNameEdit]),
-    [_onNameEdit, toggleSidebar, value]
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    () => {
+      // do nothing
+    },
+    []
+    // () => toggleSidebar && value && toggleSidebar([value.toString(), _onNameEdit]),
+    // [_onNameEdit, toggleSidebar, value]
   );
 
   return (
     <div
       className={`ui--AccountName${withSidebar ? ' withSidebar' : ''} ${className}`}
-      data-testid="account-name"
       onClick={withSidebar ? _onToggleSidebar : onClick}
     >
       {label || ''}
